@@ -12,5 +12,10 @@
             this.y = y;
             this.z = z;
         }
+
+        public static implicit operator string(IntVec3 position)
+        {
+            return string.Format("X{0},Y{1},Z{2}", position.x, position.y, position.z);
+        }
     }
 }
