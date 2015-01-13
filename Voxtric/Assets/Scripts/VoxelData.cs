@@ -57,7 +57,7 @@ namespace VoxelEngine
             saveFile.Close();
         }
 
-        private void LoadData(string collectionPath)
+        public void _LoadData(string collectionPath)
         {
             string fullPath = string.Format(@"{0}\{1}.vdat", collectionPath, (string)_dataPosition);
             string dataLine;
