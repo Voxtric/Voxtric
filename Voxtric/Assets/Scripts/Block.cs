@@ -13,6 +13,13 @@
             health = (byte)((data & 65024) >> 9);
         }
 
+        public Block(byte ID, byte transparent, byte health)
+        {
+            this.ID = ID;
+            this.transparent = transparent;
+            this.health = health;
+        }
+
         public static implicit operator ushort(Block block)
         {
             ushort data = (ushort)0;

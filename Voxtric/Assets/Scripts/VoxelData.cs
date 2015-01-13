@@ -90,7 +90,7 @@ namespace VoxelEngine
                         {
                             if (y + (_dataPosition.y * SIZE) == 14)
                             {
-                                _data[x, y, z] = 2;
+                                _data[x, y, z] = (ushort)new Block(2, 0, 0);
                             }
                         }
                     }

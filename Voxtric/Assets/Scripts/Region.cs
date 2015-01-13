@@ -15,6 +15,14 @@ namespace VoxelEngine
         private MeshCollider _collider;
         private bool _requiresUpdate = false;
 
+        //For testing purposes.
+        private void Awake()
+        {
+            Initialise(new IntVec3());
+            _voxelData.LoadData(Application.persistentDataPath);
+            MeshGenerator.GenerateMesh(this);
+        }
+
         public void Initialise(IntVec3 dataPosition)
         {
             _voxelData = new VoxelData(dataPosition);
@@ -27,10 +35,6 @@ namespace VoxelEngine
             _vertices = vertices;
             _triangles = triangles;
             _uv = uv;
-        }
-
-        public void QueueMeshUpdate()
-        {
             _requiresUpdate = true;
         }
 
