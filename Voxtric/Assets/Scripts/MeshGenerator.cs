@@ -22,9 +22,15 @@ namespace VoxelEngine
                     for (int z = 0; z < VoxelData.SIZE; z++)
                     {
                         Block block = region.GetBlock(x, y, z);
-                        if (block.transparent == 0)
+                        if (block.visible == 1)
                         {
-                            //if (y )
+                            if (y + 1 < VoxelData.SIZE)
+                            {
+                                if (region.GetBlock(x, y + 1, z).visible == 0)
+                                {
+                                    //CubeTop(z, y, z, block.ID);
+                                }
+                            }
                         }
                     }
                 }
