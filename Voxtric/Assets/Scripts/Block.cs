@@ -2,15 +2,24 @@
 {
     public struct Block
     {
-        public int ID;
-        public int transparent;
-        public int health;
+        public byte ID;
+        public byte transparent;
+        public byte health;
 
         public Block(ushort data)
         {
-            ID = data & 255;
-            transparent = (data & 256) >> 8;
-            health = (data & 65024) >> 9;
+            ID = (byte)(data & 255);
+            transparent = (byte)((data & 256) >> 8);
+            health = (byte)((data & 65024) >> 9);
+        }
+
+        public static implicit operator ushort(Block block)
+        {
+            ushort data = (ushort)0;
+            data = (ushort)((data | block.health) << 1);
+            data = (ushort)((data | block.transparent) << 8);
+            data = (ushort)(data | block.ID);
+            return data;
         }
     }
 }

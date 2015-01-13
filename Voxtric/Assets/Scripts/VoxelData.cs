@@ -17,7 +17,7 @@ namespace VoxelEngine
             _dataPosition = dataPosition;
         }
 
-        public ushort _GetData(int x, int y, int z)
+        public ushort GetData(int x, int y, int z)
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
@@ -27,7 +27,7 @@ namespace VoxelEngine
             return _data[x, y, z];
         }
 
-        public void _SetData(int x, int y, int z, ushort data)
+        public void SetData(int x, int y, int z, ushort data)
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
@@ -37,7 +37,7 @@ namespace VoxelEngine
             _data[x, y, z] = data;
         }
 
-        public void _SaveData(string collectionPath)
+        public void SaveData(string collectionPath)
         {
             string fullPath = string.Format(@"{0}\{1}.vdat", collectionPath, (string)_dataPosition);
             StringBuilder dataStore = new StringBuilder();
@@ -57,7 +57,7 @@ namespace VoxelEngine
             saveFile.Close();
         }
 
-        public void _LoadData(string collectionPath)
+        public void LoadData(string collectionPath)
         {
             string fullPath = string.Format(@"{0}\{1}.vdat", collectionPath, (string)_dataPosition);
             string dataLine;
@@ -73,7 +73,7 @@ namespace VoxelEngine
                         dataLine = saveFile.ReadLine();
                         for (int z = 0; z < SIZE; z++)
                         {
-                            _data[x, y, z] = (ushort)(Convert.ToInt32(dataLine.Substring(index, 4), 16));
+                            _data[x, y, z] = (Convert.ToUInt16(dataLine.Substring(index, 4), 16));
                         }
                     }
                 }

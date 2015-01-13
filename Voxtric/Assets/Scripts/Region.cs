@@ -10,22 +10,38 @@ namespace VoxelEngine
         private Vector3[] _vertices;
         private int[] _triangles;
         private Vector2[] _uv;
-        private int _faceCount;
 
         private Mesh _mesh;
         private MeshCollider _collider;
         private bool _requiresUpdate = false;
 
-        public void _Initialise(IntVec3 dataPosition)
+        public void Initialise(IntVec3 dataPosition)
         {
             _voxelData = new VoxelData(dataPosition);
             _mesh = GetComponent<MeshFilter>().mesh;
             _collider = GetComponent<MeshCollider>();
         }
 
+        public void SetMeshInformation(Vector3[] vertices, int[] triangles, Vector2[] uv)
+        {
+            _vertices = vertices;
+            _triangles = triangles;
+            _uv = uv;
+        }
+
+        public void QueueMeshUpdate()
+        {
+            _requiresUpdate = true;
+        }
+
         public Block GetBlock(int x, int y, int z)
         {
-            return new Block(_voxelData._GetData(x, y, z));
+            return new Block(_voxelData.GetData(x, y, z));
+        }
+
+        public void SetBlock(int x, int y, int z, Block block)
+        {
+            _voxelData.SetData(x, y, z, (ushort)block);
         }
 
         private void UpdateMesh()
