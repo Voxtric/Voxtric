@@ -20,6 +20,7 @@ namespace VoxelEngine
         {
             Initialise(new IntVec3());
             _voxelData.LoadData(Application.persistentDataPath);
+            _voxelData.SaveData(Application.persistentDataPath);
             MeshGenerator.GenerateMesh(this);
         }
 
