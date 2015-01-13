@@ -2,8 +2,13 @@
 
 namespace VoxelEngine
 {
-    public class Region : MonoBehaviour
+    public sealed class Region : MonoBehaviour
     {
+        private VoxelData _voxelData;
 
+        public void _Initialise(IntVec3 dataPosition)
+        {
+            _voxelData = new VoxelData(dataPosition);
+        }
     }
 }
