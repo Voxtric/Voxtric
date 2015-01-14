@@ -3,7 +3,7 @@ using System.IO;
 
 namespace VoxelEngine
 {
-    public sealed class Initialiser : MonoBehaviour
+    public sealed class ApplicationInitialiser : MonoBehaviour
     {
         public static string gamePath;
 

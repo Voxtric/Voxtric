@@ -10,24 +10,24 @@ namespace VoxelEngine
         public const float TEXTURE_SPACING = 0.125f;
 
         public static Texture regionTexture;
-        private static Vector2[] _textureOrigins = new Vector2[256];
-        private static Vector2[] _textureDimensions = new Vector2[256];
+        private static TextureDetails[] _textureDetails = new TextureDetails[256];
 
-        private static void SetTextureDetails(byte block, Vector2 position, Vector2 dimensions)
+        private static void SetTextureDetails(byte block, Vector2 origin, Vector2 dimensions)
         {
-            _textureOrigins[block] = position;
-            _textureDimensions[block] = dimensions;
+            _textureDetails[block].origin = origin;
+            _textureDetails[block].dimensions = dimensions;
         }
 
         public static void AssignAllTextureDetails()
         {
             regionTexture = (Texture)Resources.Load("TileSheet");
+            //All texture details
             SetTextureDetails(2, new Vector2(0, 4), new Vector2(8, 4));
         }
 
         public static TextureDetails TextureDetailsFor(byte block)
         {
-            return new TextureDetails(_textureOrigins[block], _textureDimensions[block]);
+            return _textureDetails[block];
         }
 
         public static Vector2 AdjustForPosition(int x, int y, int z, TextureFace face, TextureDetails details)
