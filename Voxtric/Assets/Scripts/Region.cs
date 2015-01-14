@@ -16,7 +16,7 @@ namespace VoxelEngine
         private bool _requiresUpdate = false;
 
         //For testing purposes.
-        private void Awake()
+        private void Start()
         {
             Initialise(new IntVec3());
             _voxelData.LoadData(Application.persistentDataPath);
@@ -26,6 +26,7 @@ namespace VoxelEngine
 
         public void Initialise(IntVec3 dataPosition)
         {
+            renderer.material.mainTexture = TextureFinder.regionTexture;
             _voxelData = new VoxelData(dataPosition);
             _mesh = GetComponent<MeshFilter>().mesh;
             _collider = GetComponent<MeshCollider>();

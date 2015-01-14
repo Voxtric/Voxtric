@@ -4,14 +4,54 @@ using System.Collections.Generic;
 
 namespace VoxelEngine
 {
-    public sealed class MeshGenerator //Entire class needs to be redone to be nested within region.
+    public sealed class MeshGenerator
     {
-        public static List<MeshGenerator> activeGenerators = new List<MeshGenerator>();
+        private static List<MeshGenerator> activeGenerators = new List<MeshGenerator>();
 
         private List<Vector3> _vertices = new List<Vector3>();
         private List<int> _triangles = new List<int>();
         private List<Vector2> _uv = new List<Vector2>();
         private int _faceCount = 0;
+
+        private void CubeTop(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x, y, z + 1));
+            _vertices.Add(new Vector3(x + 1, y, z + 1));
+            _vertices.Add(new Vector3(x + 1, y, z));
+            _vertices.Add(new Vector3(x, y, z));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.Top, details);
+            Cube(texturePosition, false);
+            _faceCount++;
+        }
+
+        private void Cube(Vector2 texturePos, bool flip)
+        {
+            _triangles.Add(_faceCount * 4);      //1
+            _triangles.Add(_faceCount * 4 + 1);  //2
+            _triangles.Add(_faceCount * 4 + 2);  //3
+
+            _triangles.Add(_faceCount * 4);      //1
+            _triangles.Add(_faceCount * 4 + 2);  //3
+            _triangles.Add(_faceCount * 4 + 3);  //4
+
+            float spacing = TextureFinder.TEXTURE_SPACING;
+            if (flip)
+            {
+                _uv.Add(new Vector2(spacing * texturePos.x, spacing * texturePos.y));
+                _uv.Add(new Vector2(spacing * texturePos.x, spacing * texturePos.y + spacing));
+                _uv.Add(new Vector2(spacing * texturePos.x + spacing, spacing * texturePos.y + spacing));
+                _uv.Add(new Vector2(spacing * texturePos.x + spacing, spacing * texturePos.y));
+            }
+            else
+            {
+                _uv.Add(new Vector2(spacing * texturePos.x + spacing, spacing * texturePos.y));
+                _uv.Add(new Vector2(spacing * texturePos.x + spacing, spacing * texturePos.y + spacing));
+                _uv.Add(new Vector2(spacing * texturePos.x, spacing * texturePos.y + spacing));
+                _uv.Add(new Vector2(spacing * texturePos.x, spacing * texturePos.y));
+            }
+        }
 
         public MeshGenerator(Region region)
         {
@@ -42,7 +82,7 @@ namespace VoxelEngine
                             {
                                 if (region.GetBlock(x, y + 1, z).visible == 0)
                                 {
-                                    //CubeTop(x, y, z, block.ID);
+                                    CubeTop(x, y, z, block.ID);
                                 }
                             }
                             if (y - 1 >= 0)
