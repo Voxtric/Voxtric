@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using VoxelEngine.Hidden;
 using System.Collections.Generic;
 
 namespace VoxelEngine

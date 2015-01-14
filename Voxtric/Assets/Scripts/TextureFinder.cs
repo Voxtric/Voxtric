@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-namespace VoxelEngine
+namespace VoxelEngine.Hidden
 {
     public static class TextureFinder
     {

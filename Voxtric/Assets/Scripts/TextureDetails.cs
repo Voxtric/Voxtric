@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VoxelEngine
+namespace VoxelEngine.Hidden
 {
     public struct TextureDetails
     {

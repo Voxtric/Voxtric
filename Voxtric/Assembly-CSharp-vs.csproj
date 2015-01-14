@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\ApplicationInitialiser.cs" />
      <Compile Include="Assets\Scripts\Block.cs" />
+     <Compile Include="Assets\Scripts\Debugger.cs" />
      <Compile Include="Assets\Scripts\IntVec3.cs" />
      <Compile Include="Assets\Scripts\MeshGenerator.cs" />
      <Compile Include="Assets\Scripts\Region.cs" />

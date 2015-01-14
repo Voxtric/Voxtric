@@ -3,7 +3,7 @@ using System.IO;
 using System.Text;
 using System;
 
-namespace VoxelEngine
+namespace VoxelEngine.Hidden
 {
     public sealed class VoxelData
     {

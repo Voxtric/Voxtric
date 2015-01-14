@@ -1,8 +1,9 @@
 ﻿using UnityEngine;
+using VoxelEngine;
 using System.Threading;
 using System.Collections.Generic;
 
-namespace VoxelEngine
+namespace VoxelEngine.Hidden
 {
     public sealed class MeshGenerator
     {
