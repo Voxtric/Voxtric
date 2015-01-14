@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace VoxelEngine
 {
-    public sealed class MeshGenerator
+    public sealed class MeshGenerator //Entire class needs to be redone to be nested within region.
     {
         public static List<MeshGenerator> activeGenerators = new List<MeshGenerator>();
 
@@ -24,18 +24,52 @@ namespace VoxelEngine
                         Block block = region.GetBlock(x, y, z);
                         if (block.visible == 1)
                         {
+                            if (x + 1 < VoxelData.SIZE)
+                            {
+                                if (region.GetBlock(x + 1, y, z).visible == 0)
+                                {
+                                    //CubeEast(x, y, z, block.ID);
+                                }
+                            }
+                            if (x - 1 >= 0)
+                            {
+                                if (region.GetBlock(x - 1, y, z).visible == 0)
+                                {
+                                    //CubeWest(x, y, z, block.ID);
+                                }
+                            }
                             if (y + 1 < VoxelData.SIZE)
                             {
                                 if (region.GetBlock(x, y + 1, z).visible == 0)
                                 {
-                                    //CubeTop(z, y, z, block.ID);
+                                    //CubeTop(x, y, z, block.ID);
+                                }
+                            }
+                            if (y - 1 >= 0)
+                            {
+                                if (region.GetBlock(x, y - 1, z).visible == 0)
+                                {
+                                    //CubeBottom(x, y, z, block.ID);
+                                }
+                            }
+                            if (z + 1 < VoxelData.SIZE)
+                            {
+                                if (region.GetBlock(x, y, z + 1).visible == 0)
+                                {
+                                    //CubeNorth(x, y, z, block.ID);
+                                }
+                            }
+                            if (z - 1 < VoxelData.SIZE)
+                            {
+                                if (region.GetBlock(x, y, z - 1).visible == 0)
+                                {
+                                    //CubeSouth(x, y, z, block.ID);
                                 }
                             }
                         }
                     }
                 }
             }
-
             region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
         }
 
