@@ -37,6 +37,7 @@ namespace VoxelEngine
             }
 
             region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
+            activeGenerators.Remove(this);
         }
 
         public static void GenerateMesh(Region region)
