@@ -21,7 +21,7 @@ namespace VoxelEngine
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
-                Debug.Log(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", (string)_dataPosition));
+                Debug.LogError(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return (ushort)1;
             }
             return _data[x, y, z];
@@ -31,7 +31,7 @@ namespace VoxelEngine
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
-                Debug.Log(string.Format("Voxel data could not be set: {0} is not a valid data position.", (string)_dataPosition));
+                Debug.LogError(string.Format("Voxel data could not be set: {0} is not a valid data position.", (string)_dataPosition));
                 return;
             }
             _data[x, y, z] = data;

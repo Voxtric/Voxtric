@@ -59,7 +59,7 @@ namespace VoxelEngine
                                     //CubeNorth(x, y, z, block.ID);
                                 }
                             }
-                            if (z - 1 < VoxelData.SIZE)
+                            if (z - 1 >= 0)
                             {
                                 if (region.GetBlock(x, y, z - 1).visible == 0)
                                 {
