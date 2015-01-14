@@ -13,6 +13,32 @@ namespace VoxelEngine
         private List<Vector2> _uv = new List<Vector2>();
         private int _faceCount = 0;
 
+        private void CubeEast(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x + 1, y - 1, z));
+            _vertices.Add(new Vector3(x + 1, y, z));
+            _vertices.Add(new Vector3(x + 1, y, z + 1));
+            _vertices.Add(new Vector3(x + 1, y - 1, z + 1));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.East, details);
+            Cube(texturePosition, true);
+            _faceCount++;
+        }
+
+        private void CubeWest(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x, y - 1, z + 1));
+            _vertices.Add(new Vector3(x, y, z + 1));
+            _vertices.Add(new Vector3(x, y, z));
+            _vertices.Add(new Vector3(x, y - 1, z));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.West, details);
+            Cube(texturePosition, false);
+            _faceCount++;
+        }
+
         private void CubeTop(int x, int y, int z, byte blockID)
         {
             _vertices.Add(new Vector3(x, y, z + 1));
@@ -23,6 +49,45 @@ namespace VoxelEngine
             TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
             Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.Top, details);
             Cube(texturePosition, false);
+            _faceCount++;
+        }
+
+        private void CubeBottom(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x, y - 1, z));
+            _vertices.Add(new Vector3(x + 1, y - 1, z));
+            _vertices.Add(new Vector3(x + 1, y - 1, z + 1));
+            _vertices.Add(new Vector3(x, y - 1, z + 1));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.Bottom, details);
+            Cube(texturePosition, true);
+            _faceCount++;
+        }
+
+        private void CubeNorth(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x + 1, y - 1, z + 1));
+            _vertices.Add(new Vector3(x + 1, y, z + 1));
+            _vertices.Add(new Vector3(x, y, z + 1));
+            _vertices.Add(new Vector3(x, y - 1, z + 1));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.North, details);
+            Cube(texturePosition, false);
+            _faceCount++;
+        }
+
+        private void CubeSouth(int x, int y, int z, byte blockID)
+        {
+            _vertices.Add(new Vector3(x, y - 1, z));
+            _vertices.Add(new Vector3(x, y, z));
+            _vertices.Add(new Vector3(x + 1, y, z));
+            _vertices.Add(new Vector3(x + 1, y - 1, z));
+
+            TextureDetails details = TextureFinder.TextureDetailsFor(blockID);
+            Vector2 texturePosition = TextureFinder.AdjustForPosition(x, y, z, TextureFinder.TextureFace.South, details);
+            Cube(texturePosition, true);
             _faceCount++;
         }
 
@@ -55,6 +120,7 @@ namespace VoxelEngine
 
         public MeshGenerator(Region region)
         {
+            //All work is done in the constructor.
             for (int x = 0; x < VoxelData.SIZE; x++)
             {
                 for (int y = 0; y < VoxelData.SIZE; y++)
@@ -68,14 +134,14 @@ namespace VoxelEngine
                             {
                                 if (region.GetBlock(x + 1, y, z).visible == 0)
                                 {
-                                    //CubeEast(x, y, z, block.ID);
+                                    CubeEast(x, y, z, block.ID);
                                 }
                             }
                             if (x - 1 >= 0)
                             {
                                 if (region.GetBlock(x - 1, y, z).visible == 0)
                                 {
-                                    //CubeWest(x, y, z, block.ID);
+                                    CubeWest(x, y, z, block.ID);
                                 }
                             }
                             if (y + 1 < VoxelData.SIZE)
@@ -89,21 +155,21 @@ namespace VoxelEngine
                             {
                                 if (region.GetBlock(x, y - 1, z).visible == 0)
                                 {
-                                    //CubeBottom(x, y, z, block.ID);
+                                    CubeBottom(x, y, z, block.ID);
                                 }
                             }
                             if (z + 1 < VoxelData.SIZE)
                             {
                                 if (region.GetBlock(x, y, z + 1).visible == 0)
                                 {
-                                    //CubeNorth(x, y, z, block.ID);
+                                    CubeNorth(x, y, z, block.ID);
                                 }
                             }
                             if (z - 1 >= 0)
                             {
                                 if (region.GetBlock(x, y, z - 1).visible == 0)
                                 {
-                                    //CubeSouth(x, y, z, block.ID);
+                                    CubeSouth(x, y, z, block.ID);
                                 }
                             }
                         }

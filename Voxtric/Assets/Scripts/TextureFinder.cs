@@ -12,17 +12,17 @@ namespace VoxelEngine
         public static Texture regionTexture;
         private static TextureDetails[] _textureDetails = new TextureDetails[256];
 
-        private static void SetTextureDetails(byte block, Vector2 origin, Vector2 dimensions)
+        private static void SetTextureDetails(byte block, byte xOrigin, byte yOrigin, byte xDimension, byte yDimension)
         {
-            _textureDetails[block].origin = origin;
-            _textureDetails[block].dimensions = dimensions;
+            _textureDetails[block].origin = new Vector2(xOrigin, yOrigin);
+            _textureDetails[block].dimensions = new Vector2(xDimension, yDimension);
         }
 
         public static void AssignAllTextureDetails()
         {
             regionTexture = (Texture)Resources.Load("TileSheet");
             //All texture details
-            SetTextureDetails(2, new Vector2(0, 4), new Vector2(8, 4));
+            SetTextureDetails(2, 0, 4, 8, 4);
         }
 
         public static TextureDetails TextureDetailsFor(byte block)
