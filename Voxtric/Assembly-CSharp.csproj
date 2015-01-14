@@ -46,15 +46,15 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\ApplicationInitialiser.cs" />
-     <Compile Include="Assets\Scripts\Block.cs" />
-     <Compile Include="Assets\Scripts\Debugger.cs" />
-     <Compile Include="Assets\Scripts\IntVec3.cs" />
-     <Compile Include="Assets\Scripts\MeshGenerator.cs" />
-     <Compile Include="Assets\Scripts\Region.cs" />
-     <Compile Include="Assets\Scripts\TextureDetails.cs" />
-     <Compile Include="Assets\Scripts\TextureFinder.cs" />
-     <Compile Include="Assets\Scripts\VoxelData.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\ApplicationInitialiser.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Block.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Debugger.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGenerator.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureDetails.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureFinder.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\VoxelData.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Region.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
