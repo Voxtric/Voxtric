@@ -48,7 +48,6 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\VoxelEngine\ApplicationInitialiser.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Block.cs" />
-     <Compile Include="Assets\Scripts\VoxelEngine\CodeFile1.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Debugger.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGenerator.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureDetails.cs" />
@@ -56,6 +55,7 @@
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\VoxelData.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Region.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\RegionCollection.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>
