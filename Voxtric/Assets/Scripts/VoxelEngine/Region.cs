@@ -7,6 +7,7 @@ namespace VoxelEngine
     public sealed class Region : MonoBehaviour
     {
         private VoxelData _voxelData;
+        private MeshGenerator _meshGenerator;
 
         private Vector3[] _vertices;
         private int[] _triangles;
@@ -22,13 +23,14 @@ namespace VoxelEngine
             Initialise(new IntVec3());
             _voxelData.LoadData(Application.persistentDataPath);
             _voxelData.SaveData(Application.persistentDataPath);
-            MeshGenerator.GenerateMesh(this);
+            _meshGenerator.GenerateMesh(this);
         }
 
         public void Initialise(IntVec3 dataPosition)
         {
             renderer.material.mainTexture = TextureFinder.regionTexture;
             _voxelData = new VoxelData(dataPosition);
+            _meshGenerator = new MeshGenerator();
             _mesh = GetComponent<MeshFilter>().mesh;
             _collider = GetComponent<MeshCollider>();
         }

@@ -7,8 +7,6 @@ namespace VoxelEngine.Hidden
 {
     public sealed class MeshGenerator
     {
-        private static List<MeshGenerator> activeGenerators = new List<MeshGenerator>();
-
         private List<Vector3> _vertices = new List<Vector3>();
         private List<int> _triangles = new List<int>();
         private List<Vector2> _uv = new List<Vector2>();
@@ -119,9 +117,9 @@ namespace VoxelEngine.Hidden
             }
         }
 
-        public MeshGenerator(Region region)
+        private void GenerateRegion(System.Object regionAsObject)
         {
-            //All work is done in the constructor.
+            Region region = (Region)regionAsObject;
             for (int x = 0; x < VoxelData.SIZE; x++)
             {
                 for (int y = 0; y < VoxelData.SIZE; y++)
@@ -178,17 +176,22 @@ namespace VoxelEngine.Hidden
                 }
             }
             region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
-            activeGenerators.Remove(this);
         }
 
-        public static void GenerateMesh(Region region)
+        //Requires everything still to do to it.
+        private void GenerateCollection(System.Object regionCollectionAsObject)
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(CreateNewGenerator), region);
+            RegionCollection regionCollection = (RegionCollection)regionCollectionAsObject;
         }
 
-        private static void CreateNewGenerator(System.Object obj)
+        public void GenerateMesh(Region region)
         {
-            activeGenerators.Add(new MeshGenerator((Region)obj));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(GenerateRegion), region);
+        }
+
+        public void GenerateMesh(RegionCollection regionCollection)
+        {
+            ThreadPool.QueueUserWorkItem(new WaitCallback(GenerateCollection), regionCollection);
         }
     }
 }
