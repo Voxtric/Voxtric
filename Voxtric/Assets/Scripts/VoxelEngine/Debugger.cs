@@ -4,15 +4,24 @@ namespace VoxelEngine
 {
     public class Debugger : MonoBehaviour
     {
-        private static bool _boundaryDisplay;
+        private bool _displayBoundary = false;
+        private bool _displayGUI = true;
 
         private void Update()
         {
             RegisterInputs();
 
-            if (_boundaryDisplay)
+            if (_displayBoundary)
             {
 
+            }
+        }
+
+        private void OnGUI()
+        {
+            if (_displayGUI)
+            {
+                GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}", (int)(1.0f / Time.smoothDeltaTime)));
             }
         }
 
@@ -20,7 +29,11 @@ namespace VoxelEngine
         {
             if (Input.GetKeyDown(KeyCode.B))
             {
-                _boundaryDisplay = !_boundaryDisplay;
+                _displayBoundary = !_displayBoundary;
+            }
+            if (Input.GetKeyDown(KeyCode.G))
+            {
+                _displayGUI = !_displayGUI;
             }
         }
     }
