@@ -15,7 +15,7 @@ namespace VoxelEngine.Hidden
         public VoxelData(IntVec3 dataPosition)
         {
             _dataPosition = dataPosition;
-            LoadData(Application.persistentDataPath);
+            LoadData(ApplicationInitialiser.gamePath);
         }
 
         public ushort GetData(int x, int y, int z)

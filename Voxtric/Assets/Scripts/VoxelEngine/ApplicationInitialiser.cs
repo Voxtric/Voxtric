@@ -10,6 +10,7 @@ namespace VoxelEngine
 
         private void Awake()
         {
+            gamePath = Application.persistentDataPath;
             SetUpDirectories();
             TextureFinder.AssignAllTextureDetails();
         }

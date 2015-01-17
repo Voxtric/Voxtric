@@ -21,12 +21,12 @@ namespace VoxelEngine
 
         public void LoadVoxelData()
         {
-            _voxelData.LoadData(Application.persistentDataPath);
+            _voxelData.LoadData(ApplicationInitialiser.gamePath);
         }
 
         public void SaveVoxelData()
         {
-            _voxelData.SaveData(Application.persistentDataPath);
+            _voxelData.SaveData(ApplicationInitialiser.gamePath);
         }
 
         public void GenerateMesh()
@@ -79,6 +79,13 @@ namespace VoxelEngine
 
             _collider.sharedMesh = null;
             _collider.sharedMesh = _mesh;
+
+            _regionCollection.QueueMeshGeneration();
+        }
+
+        public ColliderInfo GetColliderInfo()
+        {
+            return new ColliderInfo(_vertices, _triangles);
         }
 
         private void LateUpdate()
@@ -90,7 +97,7 @@ namespace VoxelEngine
             }
             else if (_blockChanged)
             {
-                GenerateMesh();
+                _meshGenerator.GenerateMesh(this);
                 _blockChanged = false;
             }
         }
