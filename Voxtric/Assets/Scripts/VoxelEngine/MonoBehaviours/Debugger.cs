@@ -69,6 +69,7 @@ namespace VoxelEngine.MonoBehaviours
             if (_displayGUI)
             {
                 GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}", (int)(1.0f / Time.smoothDeltaTime)));
+                GUI.Label(new Rect(3, 3, 300, 20), string.Format("Regions in memory: {0}", RegionCollection.totalLoadedRegions));
             }
         }
 

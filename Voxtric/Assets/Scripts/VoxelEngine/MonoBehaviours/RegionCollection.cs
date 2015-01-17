@@ -8,9 +8,22 @@ namespace VoxelEngine.MonoBehaviours
     public sealed class RegionCollection : MonoBehaviour
     {
         public static List<RegionCollection> allCollections = new List<RegionCollection>();
+        public static int totalLoadedRegions
+        {
+            get
+            {
+                int total = 0;
+                foreach (RegionCollection regionCollection in allCollections)
+                {
+                    total += regionCollection._regionsLoaded;
+                }
+                return total;
+            }
+        }
 
         [SerializeField]
         private GameObject regionPrefab = null;
+        private int _regionsLoaded = 0;
 
         Region[,,] _regions;
         private IntVec3 _dimensions;
@@ -37,6 +50,14 @@ namespace VoxelEngine.MonoBehaviours
         public void QueueMeshGeneration()
         {
             _regionChanged = true;
+        }
+
+        private void UnloadRegion(IntVec3 dataPosition)
+        {
+            Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
+            _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
+            MonoBehaviour.Destroy(region);
+            _regionsLoaded--;
         }
 
         public void SaveAllVoxelData()
@@ -93,6 +114,11 @@ namespace VoxelEngine.MonoBehaviours
             return _dimensions;
         }
 
+        public int GetRegionsLoaded()
+        {
+            return _regionsLoaded;
+        }
+
         private void UpdateMesh()
         {
             _mesh.Clear();
@@ -140,6 +166,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             Region region = ((GameObject)Instantiate(regionPrefab)).GetComponent<Region>();
             region.Initialise(dataPosition, this);
+            _regionsLoaded++;
             return region;
         }
     }
