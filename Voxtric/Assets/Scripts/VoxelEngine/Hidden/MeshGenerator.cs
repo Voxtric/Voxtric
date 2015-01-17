@@ -122,6 +122,7 @@ namespace VoxelEngine.Hidden
             _vertices.Clear();
             _triangles.Clear();
             _uv.Clear();
+            _faceCount = 0;
             Region region = (Region)regionAsObject;
             for (int x = 0; x < VoxelData.SIZE; x++)
             {
@@ -204,7 +205,7 @@ namespace VoxelEngine.Hidden
                             _triangles.AddRange(colliderInfo.triangles);
                             for (int i = startVert; i < _vertices.Count; i++)
                             {
-                                _vertices[i] += (new Vector3(x, y, z) * VoxelData.SIZE);
+                                _vertices[i] += new Vector3(x, y, z) * VoxelData.SIZE;
                             }
                             for (int i = startTri; i < _triangles.Count; i++)
                             {

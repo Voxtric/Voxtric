@@ -37,7 +37,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             gameObject.name = (string)dataPosition;
             renderer.material.mainTexture = TextureFinder.regionTexture;
-            _voxelData = new VoxelData(dataPosition);
+            _voxelData = new VoxelData(dataPosition, regionCollection.collectionDirectory);
             _meshGenerator = new MeshGenerator();
             _mesh = GetComponent<MeshFilter>().mesh;
             _collider = GetComponent<MeshCollider>();

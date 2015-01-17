@@ -73,8 +73,25 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
+        private void ChangeAtCursor()
+        {
+            RaycastHit hit;
+            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Region Collection")))
+            {
+                RegionCollection regionCollection = hit.collider.GetComponent<RegionCollection>();
+                Vector3 position = hit.point + (hit.normal * -0.5f) + Vector3.up;
+                IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
+                VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
+            }
+        }
+
         private void RegisterInputs()
         {
+            if (Input.GetMouseButton(0))
+            {
+                ChangeAtCursor();
+            }
+
             if (Input.GetKeyDown(KeyCode.Alpha1))
             {
                 _displayBoundaries = !_displayBoundaries;

@@ -13,10 +13,10 @@ namespace VoxelEngine.Hidden
         private ushort[,,] _data = new ushort[SIZE, SIZE, SIZE];
         private IntVec3 _dataPosition;
 
-        public VoxelData(IntVec3 dataPosition)
+        public VoxelData(IntVec3 dataPosition, string loadFrom)
         {
             _dataPosition = dataPosition;
-            LoadData(ApplicationInitialiser.gameDirectory);
+            LoadData(loadFrom);
         }
 
         public ushort GetData(int x, int y, int z)
@@ -76,6 +76,7 @@ namespace VoxelEngine.Hidden
                         for (int z = 0; z < SIZE; z++)
                         {
                             _data[x, y, z] = (Convert.ToUInt16(dataLine.Substring(index, 4), 16));
+                            index += 4;
                         }
                     }
                 }

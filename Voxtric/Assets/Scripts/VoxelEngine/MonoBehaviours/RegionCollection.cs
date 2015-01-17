@@ -37,14 +37,14 @@ namespace VoxelEngine.MonoBehaviours
         private Mesh _mesh;
         private MeshCollider _collider;
 
-        private string _collectionPath
+        public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
         }
 
         private void Start()
         {
-            Initialise(new IntVec3(3, 3, 3), "Test Region 1");
+            Initialise(new IntVec3(20, 20, 20), "Test Region 1");
         }
 
         public void QueueMeshGeneration()
@@ -71,7 +71,7 @@ namespace VoxelEngine.MonoBehaviours
                         Region region = GetRegion(x, y, z);
                         if (region != null)
                         {
-                            region.SaveVoxelData(_collectionPath);
+                            region.SaveVoxelData(collectionDirectory);
                         }
                     }
                 }
@@ -122,8 +122,10 @@ namespace VoxelEngine.MonoBehaviours
         private void UpdateMesh()
         {
             _mesh.Clear();
+            rigidbody.isKinematic = true;
             _mesh.vertices = _vertices;
             _mesh.triangles = _triangles;
+            _mesh.RecalculateNormals();
             _collider.sharedMesh = null;
             _collider.sharedMesh = _mesh;
         }
