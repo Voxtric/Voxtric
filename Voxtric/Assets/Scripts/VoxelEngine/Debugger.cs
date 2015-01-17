@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace VoxelEngine
+namespace VoxelEngine.MonoBehaviours
 {
     public class Debugger : MonoBehaviour
     {

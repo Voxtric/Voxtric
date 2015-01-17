@@ -15,7 +15,7 @@ namespace VoxelEngine
             this.z = z;
         }
 
-        public static implicit operator string(IntVec3 intVec3)
+        public static explicit operator string(IntVec3 intVec3)
         {
             return string.Format("X{0},Y{1},Z{2}", intVec3.x, intVec3.y, intVec3.z);
         }

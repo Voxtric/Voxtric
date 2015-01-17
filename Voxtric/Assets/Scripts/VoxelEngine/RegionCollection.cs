@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
 
-namespace VoxelEngine
+namespace VoxelEngine.MonoBehaviours
 {
     public sealed class RegionCollection : MonoBehaviour
     {

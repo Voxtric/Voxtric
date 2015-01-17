@@ -1,7 +1,7 @@
-﻿using UnityEngine;
-using VoxelEngine;
+﻿using System.Collections.Generic;
 using System.Threading;
-using System.Collections.Generic;
+using UnityEngine;
+using VoxelEngine.MonoBehaviours;
 
 namespace VoxelEngine.Hidden
 {
@@ -117,16 +117,11 @@ namespace VoxelEngine.Hidden
             }
         }
 
-        public void Clear()
+        private void GenerateRegion(System.Object regionAsObject)
         {
             _vertices.Clear();
             _triangles.Clear();
             _uv.Clear();
-        }
-
-        private void GenerateRegion(System.Object regionAsObject)
-        {
-            Clear();
             Region region = (Region)regionAsObject;
             for (int x = 0; x < VoxelData.SIZE; x++)
             {
@@ -189,11 +184,10 @@ namespace VoxelEngine.Hidden
         //Requires everything still to do to it.
         private void GenerateCollection(System.Object regionCollectionAsObject)
         {
-            Clear();
+            _vertices.Clear();
+            _triangles.Clear();
             RegionCollection regionCollection = (RegionCollection)regionCollectionAsObject;
             IntVec3 dimensions = regionCollection.GetDimensions();
-            List<Mesh> meshes = new List<Mesh>();
-            List<Region> regions = new List<Region>();
             for (int x = 0; x < dimensions.x; x++)
             {
                 for (int y = 0; y < dimensions.y; y++)

@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
-using System.Collections.Generic;
 
-namespace VoxelEngine
+namespace VoxelEngine.MonoBehaviours
 {
     public sealed class Region : MonoBehaviour
     {
@@ -36,7 +35,7 @@ namespace VoxelEngine
 
         public void Initialise(IntVec3 dataPosition, RegionCollection regionCollection)
         {
-            gameObject.name = dataPosition;
+            gameObject.name = (string)dataPosition;
             renderer.material.mainTexture = TextureFinder.regionTexture;
             _voxelData = new VoxelData(dataPosition);
             _meshGenerator = new MeshGenerator();

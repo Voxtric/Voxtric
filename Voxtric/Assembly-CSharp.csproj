@@ -58,6 +58,7 @@
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Region.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\RegionCollection.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\SixDegreeMovement.cs" />
  <Reference Include="UnityEngine.UI">
  <HintPath>C:/Program Files (x86)/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/4.6.0/UnityEngine.UI.dll</HintPath>
  </Reference>

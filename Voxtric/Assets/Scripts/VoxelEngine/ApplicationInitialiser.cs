@@ -1,8 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
-using System.IO;
 
-namespace VoxelEngine
+namespace VoxelEngine.MonoBehaviours
 {
     public sealed class ApplicationInitialiser : MonoBehaviour
     {

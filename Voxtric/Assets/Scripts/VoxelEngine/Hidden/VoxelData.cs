@@ -1,7 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
 using System.IO;
 using System.Text;
-using System;
+using UnityEngine;
+using VoxelEngine.MonoBehaviours;
 
 namespace VoxelEngine.Hidden
 {
@@ -22,7 +23,7 @@ namespace VoxelEngine.Hidden
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
-                Debug.LogError(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", new IntVec3(x, y, z)));
+                Debug.LogError(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return (ushort)1;
             }
             return _data[x, y, z];
@@ -32,7 +33,7 @@ namespace VoxelEngine.Hidden
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
             {
-                Debug.LogError(string.Format("Voxel data could not be set: {0} is not a valid data position.", _dataPosition));
+                Debug.LogError(string.Format("Voxel data could not be set: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return;
             }
             _data[x, y, z] = data;
