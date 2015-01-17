@@ -121,13 +121,14 @@ namespace VoxelEngine.MonoBehaviours
 
         private void UpdateMesh()
         {
-            _mesh.Clear();
             rigidbody.isKinematic = true;
+            _mesh.Clear();
             _mesh.vertices = _vertices;
             _mesh.triangles = _triangles;
             _mesh.RecalculateNormals();
             _collider.sharedMesh = null;
             _collider.sharedMesh = _mesh;
+            rigidbody.isKinematic = false;
         }
 
         public void Initialise(IntVec3 dimensions, string name)

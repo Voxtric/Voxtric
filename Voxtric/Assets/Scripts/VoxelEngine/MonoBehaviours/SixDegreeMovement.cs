@@ -14,9 +14,9 @@ namespace VoxelEngine.MonoBehaviours
 
         private void Update()
         {
-            RegisterMovement();
             if (Input.GetMouseButton(1))
             {
+                RegisterMovement();
                 RegisterLooking();
                 Screen.lockCursor = true;
                 Screen.showCursor = false;
