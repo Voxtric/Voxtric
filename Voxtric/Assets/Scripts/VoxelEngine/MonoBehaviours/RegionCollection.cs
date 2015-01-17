@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
 using System.Collections.Generic;
+using System.IO;
 
 namespace VoxelEngine.MonoBehaviours
 {
@@ -25,7 +26,7 @@ namespace VoxelEngine.MonoBehaviours
 
         private string _collectionPath
         {
-            get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gamePath, name); }
+            get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
         }
 
         private void Start()
@@ -109,6 +110,7 @@ namespace VoxelEngine.MonoBehaviours
             _meshGenerator = new MeshGenerator();
             _mesh = new Mesh();
             _collider = GetComponent<MeshCollider>();
+            Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
 
             for (int x = 0; x < dimensions.x; x++)
             {

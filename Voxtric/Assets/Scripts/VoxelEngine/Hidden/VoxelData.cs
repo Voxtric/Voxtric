@@ -16,7 +16,7 @@ namespace VoxelEngine.Hidden
         public VoxelData(IntVec3 dataPosition)
         {
             _dataPosition = dataPosition;
-            LoadData(ApplicationInitialiser.gamePath);
+            LoadData(ApplicationInitialiser.gameDirectory);
         }
 
         public ushort GetData(int x, int y, int z)
@@ -39,9 +39,9 @@ namespace VoxelEngine.Hidden
             _data[x, y, z] = data;
         }
 
-        public void SaveData(string collectionPath)
+        public void SaveData(string collectionDirectory)
         {
-            string fullPath = string.Format(@"{0}\{1}.vdat", collectionPath, (string)_dataPosition);
+            string fullPath = string.Format(@"{0}\{1}.vdat", collectionDirectory, (string)_dataPosition);
             StringBuilder dataStore = new StringBuilder();
             for (int x = 0; x < SIZE; x++)
             {
@@ -59,9 +59,9 @@ namespace VoxelEngine.Hidden
             saveFile.Close();
         }
 
-        public void LoadData(string collectionPath)
+        public void LoadData(string collectionDirectory)
         {
-            string fullPath = string.Format(@"{0}\{1}.vdat", collectionPath, (string)_dataPosition);
+            string fullPath = string.Format(@"{0}\{1}.vdat", collectionDirectory, (string)_dataPosition);
             string dataLine;
             int index;
             if (File.Exists(fullPath))
