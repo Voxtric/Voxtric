@@ -1,10 +1,13 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
+using System.Collections.Generic;
 
 namespace VoxelEngine.MonoBehaviours
 {
     public sealed class RegionCollection : MonoBehaviour
     {
+        public static List<RegionCollection> allCollections = new List<RegionCollection>();
+
         [SerializeField]
         private GameObject regionPrefab = null;
 
@@ -20,6 +23,11 @@ namespace VoxelEngine.MonoBehaviours
         private Mesh _mesh;
         private MeshCollider _collider;
 
+        private string _collectionPath
+        {
+            get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gamePath, name); }
+        }
+
         private void Start()
         {
             Initialise(new IntVec3(3, 3, 3), "Test Region 1");
@@ -28,6 +36,24 @@ namespace VoxelEngine.MonoBehaviours
         public void QueueMeshGeneration()
         {
             _regionChanged = true;
+        }
+
+        public void SaveAllVoxelData()
+        {
+            for (int x = 0; x < _dimensions.x; x++)
+            {
+                for (int y = 0; y < _dimensions.y; y++)
+                {
+                    for (int z = 0; z < _dimensions.z; z++)
+                    {
+                        Region region = GetRegion(x, y, z);
+                        if (region != null)
+                        {
+                            region.SaveVoxelData(_collectionPath);
+                        }
+                    }
+                }
+            }
         }
 
         public void SetMeshInformation(Vector3[] vertices, int[] triangles)
@@ -105,6 +131,7 @@ namespace VoxelEngine.MonoBehaviours
                     }
                 }
             }
+            allCollections.Add(this);
         }
 
         public Region CreateRegion(IntVec3 dataPosition)

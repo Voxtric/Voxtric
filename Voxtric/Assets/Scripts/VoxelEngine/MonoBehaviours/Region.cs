@@ -18,14 +18,14 @@ namespace VoxelEngine.MonoBehaviours
         private bool _requiresUpdate = false;
         private bool _blockChanged = false;
 
-        public void LoadVoxelData()
+        public void LoadVoxelData(string collectionPath)
         {
-            _voxelData.LoadData(ApplicationInitialiser.gamePath);
+            _voxelData.LoadData(collectionPath);
         }
 
-        public void SaveVoxelData()
+        public void SaveVoxelData(string collectionPath)
         {
-            _voxelData.SaveData(ApplicationInitialiser.gamePath);
+            _voxelData.SaveData(collectionPath);
         }
 
         public void GenerateMesh()
