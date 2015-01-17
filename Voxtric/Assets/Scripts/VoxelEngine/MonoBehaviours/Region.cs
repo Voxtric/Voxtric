@@ -91,7 +91,6 @@ namespace VoxelEngine.MonoBehaviours
             {
                 UpdateMesh();
                 _requiresUpdate = false;
-                _regionCollection.QueueMeshGeneration();
             }
             else if (_blockChanged)
             {
