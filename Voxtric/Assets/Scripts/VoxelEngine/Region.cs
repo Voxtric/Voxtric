@@ -17,7 +17,7 @@ namespace VoxelEngine
         private Mesh _mesh;
         private MeshCollider _collider;
         private bool _requiresUpdate = false;
-        private bool _blockChanged = true;
+        private bool _blockChanged = false;
 
         public void LoadVoxelData()
         {
@@ -74,13 +74,11 @@ namespace VoxelEngine
             _mesh.vertices = _vertices;
             _mesh.triangles = _triangles;
             _mesh.uv = _uv;
-            //_mesh.Optimise();
+            //_mesh.Optimize();
             _mesh.RecalculateNormals();
 
             _collider.sharedMesh = null;
             _collider.sharedMesh = _mesh;
-
-            _regionCollection.QueueMeshGeneration();
         }
 
         public ColliderInfo GetColliderInfo()
@@ -94,10 +92,11 @@ namespace VoxelEngine
             {
                 UpdateMesh();
                 _requiresUpdate = false;
+                _regionCollection.QueueMeshGeneration();
             }
             else if (_blockChanged)
             {
-                _meshGenerator.GenerateMesh(this);
+                GenerateMesh();
                 _blockChanged = false;
             }
         }

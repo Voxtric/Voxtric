@@ -117,8 +117,16 @@ namespace VoxelEngine.Hidden
             }
         }
 
+        public void Clear()
+        {
+            _vertices.Clear();
+            _triangles.Clear();
+            _uv.Clear();
+        }
+
         private void GenerateRegion(System.Object regionAsObject)
         {
+            Clear();
             Region region = (Region)regionAsObject;
             for (int x = 0; x < VoxelData.SIZE; x++)
             {
@@ -181,7 +189,38 @@ namespace VoxelEngine.Hidden
         //Requires everything still to do to it.
         private void GenerateCollection(System.Object regionCollectionAsObject)
         {
+            Clear();
             RegionCollection regionCollection = (RegionCollection)regionCollectionAsObject;
+            IntVec3 dimensions = regionCollection.GetDimensions();
+            List<Mesh> meshes = new List<Mesh>();
+            List<Region> regions = new List<Region>();
+            for (int x = 0; x < dimensions.x; x++)
+            {
+                for (int y = 0; y < dimensions.y; y++)
+                {
+                    for (int z = 0; z < dimensions.z; z++)
+                    {
+                        Region region = regionCollection.GetRegion(x, y, z);
+                        if (!ReferenceEquals(region, null))
+                        {
+                            ColliderInfo colliderInfo = region.GetColliderInfo();
+                            int startVert = _vertices.Count;
+                            int startTri = _triangles.Count;
+                            _vertices.AddRange(colliderInfo.vertices);
+                            _triangles.AddRange(colliderInfo.triangles);
+                            for (int i = startVert; i < _vertices.Count; i++)
+                            {
+                                _vertices[i] += (new Vector3(x, y, z) * VoxelData.SIZE);
+                            }
+                            for (int i = startTri; i < _triangles.Count; i++)
+                            {
+                                _triangles[i] += startVert;
+                            }
+                        }
+                    }
+                }
+            }
+            regionCollection.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray());
         }
 
         public void GenerateMesh(Region region)

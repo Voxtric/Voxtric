@@ -61,6 +61,11 @@ namespace VoxelEngine
             return _regions[x, y, z];
         }
 
+        public IntVec3 GetDimensions()
+        {
+            return _dimensions;
+        }
+
         private void UpdateMesh()
         {
             _mesh.Clear();
