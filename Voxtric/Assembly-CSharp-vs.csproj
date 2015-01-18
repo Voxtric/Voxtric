@@ -47,14 +47,15 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Scripts\VoxelEngine\Block.cs" />
-     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\ColliderInfo.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGenerator.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGeneratorInfo.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureDetails.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureFinder.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\VoxelData.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec2.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ApplicationInitialiser.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ConcaveCollider.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Debugger.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Region.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\RegionCollection.cs" />

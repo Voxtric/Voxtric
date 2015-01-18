@@ -8,7 +8,9 @@ namespace VoxelEngine
     {
         public static IntVec3 WorldToDataPosition(RegionCollection regionCollection, Vector3 worldPosition)
         {
-            return new IntVec3((int)worldPosition.x, (int)worldPosition.y, (int)worldPosition.z);
+            Transform transform = regionCollection.GetPositionPointer();
+            transform.position = worldPosition;
+            return new IntVec3((int)transform.localPosition.x, (int)transform.localPosition.y, (int)transform.localPosition.z);
         }
 
         public static void ChangeAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)

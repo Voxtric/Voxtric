@@ -19,6 +19,11 @@ namespace VoxelEngine.Hidden
             LoadData(loadFrom);
         }
 
+        public IntVec3 GetDataPosition()
+        {
+            return _dataPosition;
+        }
+
         public ushort GetData(int x, int y, int z)
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
@@ -91,7 +96,11 @@ namespace VoxelEngine.Hidden
                     {
                         for (int z = 0; z < SIZE; z++)
                         {
-                            if (y + (_dataPosition.y * SIZE) == 14 && x + (_dataPosition.x * SIZE) > 0 && z + (_dataPosition.z * SIZE) > 0 && x + (_dataPosition.x * SIZE) < 46 && z + (_dataPosition.z * SIZE) < 46)
+                            if (x + (_dataPosition.x * SIZE) == 0 || y + (_dataPosition.y * SIZE) == 0 || z + (_dataPosition.z * SIZE) == 0 || x + (_dataPosition.x * SIZE) == 47 || y + (_dataPosition.y * SIZE) == 47 || z + (_dataPosition.z * SIZE) == 47)
+                            {
+
+                            }
+                            else
                             {
                                 _data[x, y, z] = (ushort)new Block(2, 1, 0);
                             }

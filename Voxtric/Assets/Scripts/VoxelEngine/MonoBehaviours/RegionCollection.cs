@@ -27,15 +27,10 @@ namespace VoxelEngine.MonoBehaviours
 
         Region[,,] _regions;
         private IntVec3 _dimensions;
-        private MeshGenerator _meshGenerator;
+        Transform _positionPointer;
 
-        private bool _regionChanged = false;
-        private bool _requiresUpdate = false;
-        private Vector3[] _vertices;
-        private int[] _triangles;
-
-        private Mesh _mesh;
-        private MeshCollider _collider;
+        private Transform _concaveShapes;
+        private Transform _convexShapes;
 
         public string collectionDirectory
         {
@@ -44,12 +39,7 @@ namespace VoxelEngine.MonoBehaviours
 
         private void Start()
         {
-            Initialise(new IntVec3(20, 20, 20), "Test Region 1");
-        }
-
-        public void QueueMeshGeneration()
-        {
-            _regionChanged = true;
+            Initialise(new IntVec3(3, 3, 3), "Test Region 1");
         }
 
         private void UnloadRegion(IntVec3 dataPosition)
@@ -78,27 +68,6 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
-        public void SetMeshInformation(Vector3[] vertices, int[] triangles)
-        {
-            _vertices = vertices;
-            _triangles = triangles;
-            _requiresUpdate = true;
-        }
-
-        private void LateUpdate()
-        {
-            if (_requiresUpdate)
-            {
-                UpdateMesh();
-                _requiresUpdate = false;
-            }
-            if (_regionChanged)
-            {
-                _meshGenerator.GenerateMesh(this);
-                _regionChanged = false;
-            }
-        }
-
         public Region GetRegion(int x, int y, int z)
         {
             if (x < 0 || y < 0 || z < 0 || x >= _dimensions.x || y >= _dimensions.y || z >= _dimensions.z)
@@ -119,50 +88,40 @@ namespace VoxelEngine.MonoBehaviours
             return _regionsLoaded;
         }
 
-        private void UpdateMesh()
+        public Transform GetPositionPointer()
         {
-            rigidbody.isKinematic = true;
-            _mesh.Clear();
-            _mesh.vertices = _vertices;
-            _mesh.triangles = _triangles;
-            _mesh.RecalculateNormals();
-            _collider.sharedMesh = null;
-            _collider.sharedMesh = _mesh;
-            rigidbody.isKinematic = false;
+            return _positionPointer;
         }
 
         public void Initialise(IntVec3 dimensions, string name)
         {
-            gameObject.name = name;
+            transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
-            _meshGenerator = new MeshGenerator();
-            _mesh = new Mesh();
-            _collider = GetComponent<MeshCollider>();
+            _concaveShapes = transform.GetChild(0);
+            _convexShapes = transform.GetChild(1);
+            _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
+            _positionPointer.parent = _concaveShapes;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
-
             for (int x = 0; x < dimensions.x; x++)
             {
                 for (int y = 0; y < dimensions.y; y++)
                 {
                     for (int z = 0; z < dimensions.z; z++)
                     {
-                        _regions[x, y, z] = CreateRegion(new IntVec3(x, y, z));
-                    }
-                }
-            }
-
-            for (int x = 0; x < dimensions.x; x++)
-            {
-                for (int y = 0; y < dimensions.y; y++)
-                {
-                    for (int z = 0; z < dimensions.z; z++)
-                    {
-                        _regions[x, y, z].GenerateMesh();
+                        Region region = CreateRegion(new IntVec3(x, y, z));
+                        region.GenerateMesh();
+                        _regions[x, y, z] = region;
                     }
                 }
             }
             allCollections.Add(this);
+        }
+
+        private void FixedUpdate()
+        {
+            _concaveShapes.rotation = _convexShapes.rotation;
+            _concaveShapes.position = _convexShapes.position;
         }
 
         public Region CreateRegion(IntVec3 dataPosition)

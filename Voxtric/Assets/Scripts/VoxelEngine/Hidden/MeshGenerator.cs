@@ -2,6 +2,7 @@
 using System.Threading;
 using UnityEngine;
 using VoxelEngine.MonoBehaviours;
+using VoxelEngine.Hidden;
 
 namespace VoxelEngine.Hidden
 {
@@ -117,115 +118,143 @@ namespace VoxelEngine.Hidden
             }
         }
 
-        private void GenerateRegion(System.Object regionAsObject)
+        private void GenerateRegion(System.Object meshInfo)
         {
-            _vertices.Clear();
-            _triangles.Clear();
-            _uv.Clear();
-            _faceCount = 0;
-            Region region = (Region)regionAsObject;
-            for (int x = 0; x < VoxelData.SIZE; x++)
+            lock (_vertices)
             {
-                for (int y = 0; y < VoxelData.SIZE; y++)
+                _vertices.Clear();
+                _triangles.Clear();
+                _uv.Clear();
+                _faceCount = 0;
+                MeshGeneratorInfo info = (MeshGeneratorInfo)meshInfo;
+                for (int x = 0; x < VoxelData.SIZE; x++)
                 {
-                    for (int z = 0; z < VoxelData.SIZE; z++)
+                    for (int y = 0; y < VoxelData.SIZE; y++)
                     {
-                        Block block = region.GetBlock(x, y, z);
-                        if (block.visible == 1)
+                        for (int z = 0; z < VoxelData.SIZE; z++)
                         {
-                            if (x + 1 < VoxelData.SIZE)
+                            Block block = info.region.GetBlock(x, y, z);
+                            if (block.visible == 1)
                             {
-                                if (region.GetBlock(x + 1, y, z).visible == 0)
+                                if (x + 1 < VoxelData.SIZE)
                                 {
-                                    CubeEast(x, y, z, block.ID);
+                                    if (info.region.GetBlock(x + 1, y, z).visible == 0)
+                                    {
+                                        CubeEast(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            if (x - 1 >= 0)
-                            {
-                                if (region.GetBlock(x - 1, y, z).visible == 0)
+                                else if (info.dataPosition.x < info.regionCollection.GetDimensions().x - 1)
                                 {
-                                    CubeWest(x, y, z, block.ID);
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x + 1, info.dataPosition.y, info.dataPosition.z);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(0, y, z).visible == 0)
+                                        {
+                                            CubeEast(x, y, z, block.ID);
+                                        }
+                                    }
                                 }
-                            }
-                            if (y + 1 < VoxelData.SIZE)
-                            {
-                                if (region.GetBlock(x, y + 1, z).visible == 0)
+                                if (x - 1 >= 0)
                                 {
-                                    CubeTop(x, y, z, block.ID);
+                                    if (info.region.GetBlock(x - 1, y, z).visible == 0)
+                                    {
+                                        CubeWest(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            if (y - 1 >= 0)
-                            {
-                                if (region.GetBlock(x, y - 1, z).visible == 0)
+                                else if (info.dataPosition.x > 0)
                                 {
-                                    CubeBottom(x, y, z, block.ID);
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x - 1, info.dataPosition.y, info.dataPosition.z);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(VoxelData.SIZE - 1, y, z).visible == 0)
+                                        {
+                                            CubeWest(x, y, z, block.ID);
+                                        }
+                                    }
                                 }
-                            }
-                            if (z + 1 < VoxelData.SIZE)
-                            {
-                                if (region.GetBlock(x, y, z + 1).visible == 0)
+                                if (y + 1 < VoxelData.SIZE)
                                 {
-                                    CubeNorth(x, y, z, block.ID);
+                                    if (info.region.GetBlock(x, y + 1, z).visible == 0)
+                                    {
+                                        CubeTop(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            if (z - 1 >= 0)
-                            {
-                                if (region.GetBlock(x, y, z - 1).visible == 0)
+                                else if (info.dataPosition.y < info.regionCollection.GetDimensions().y - 1)
                                 {
-                                    CubeSouth(x, y, z, block.ID);
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x, info.dataPosition.y + 1, info.dataPosition.z);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(x, 0, z).visible == 0)
+                                        {
+                                            CubeTop(x, y, z, block.ID);
+                                        }
+                                    }
+                                }
+                                if (y - 1 >= 0)
+                                {
+                                    if (info.region.GetBlock(x, y - 1, z).visible == 0)
+                                    {
+                                        CubeBottom(x, y, z, block.ID);
+                                    }
+                                }
+                                else if (info.dataPosition.y > 0)
+                                {
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x, info.dataPosition.y - 1, info.dataPosition.z);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(x, VoxelData.SIZE - 1, z).visible == 0)
+                                        {
+                                            CubeBottom(x, y, z, block.ID);
+                                        }
+                                    }
+                                }
+                                if (z + 1 < VoxelData.SIZE)
+                                {
+                                    if (info.region.GetBlock(x, y, z + 1).visible == 0)
+                                    {
+                                        CubeNorth(x, y, z, block.ID);
+                                    }
+                                }
+                                else if (info.dataPosition.z < info.regionCollection.GetDimensions().z - 1)
+                                {
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x, info.dataPosition.y, info.dataPosition.z + 1);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(x, y, 0).visible == 0)
+                                        {
+                                            CubeNorth(x, y, z, block.ID);
+                                        }
+                                    }
+                                }
+                                if (z - 1 >= 0)
+                                {
+                                    if (info.region.GetBlock(x, y, z - 1).visible == 0)
+                                    {
+                                        CubeSouth(x, y, z, block.ID);
+                                    }
+                                }
+                                else if (info.dataPosition.z > 0)
+                                {
+                                    Region region = info.regionCollection.GetRegion(info.dataPosition.x, info.dataPosition.y, info.dataPosition.z - 1);
+                                    if (!ReferenceEquals(region, null))
+                                    {
+                                        if (region.GetBlock(x, y, VoxelData.SIZE - 1).visible == 0)
+                                        {
+                                            CubeSouth(x, y, z, block.ID);
+                                        }
+                                    }
                                 }
                             }
                         }
                     }
                 }
+                info.region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
             }
-            region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
         }
 
-        //Requires everything still to do to it.
-        private void GenerateCollection(System.Object regionCollectionAsObject)
+        public void GenerateMesh(MeshGeneratorInfo meshInfo)
         {
-            _vertices.Clear();
-            _triangles.Clear();
-            RegionCollection regionCollection = (RegionCollection)regionCollectionAsObject;
-            IntVec3 dimensions = regionCollection.GetDimensions();
-            for (int x = 0; x < dimensions.x; x++)
-            {
-                for (int y = 0; y < dimensions.y; y++)
-                {
-                    for (int z = 0; z < dimensions.z; z++)
-                    {
-                        Region region = regionCollection.GetRegion(x, y, z);
-                        if (!ReferenceEquals(region, null))
-                        {
-                            ColliderInfo colliderInfo = region.GetColliderInfo();
-                            int startVert = _vertices.Count;
-                            int startTri = _triangles.Count;
-                            _vertices.AddRange(colliderInfo.vertices);
-                            _triangles.AddRange(colliderInfo.triangles);
-                            for (int i = startVert; i < _vertices.Count; i++)
-                            {
-                                _vertices[i] += new Vector3(x, y, z) * VoxelData.SIZE;
-                            }
-                            for (int i = startTri; i < _triangles.Count; i++)
-                            {
-                                _triangles[i] += startVert;
-                            }
-                        }
-                    }
-                }
-            }
-            regionCollection.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray());
-        }
-
-        public void GenerateMesh(Region region)
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(GenerateRegion), region);
-        }
-
-        public void GenerateMesh(RegionCollection regionCollection)
-        {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(GenerateCollection), regionCollection);
+            ThreadPool.QueueUserWorkItem(new WaitCallback(GenerateRegion), meshInfo);
         }
     }
 }
