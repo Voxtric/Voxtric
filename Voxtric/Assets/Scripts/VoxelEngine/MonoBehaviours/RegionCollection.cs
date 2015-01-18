@@ -46,7 +46,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
             _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
-            MonoBehaviour.Destroy(region);
+            MonoBehaviour.Destroy(region.gameObject);
             _regionsLoaded--;
         }
 
@@ -95,6 +95,12 @@ namespace VoxelEngine.MonoBehaviours
 
         public void Initialise(IntVec3 dimensions, string name)
         {
+            if (GameObject.Find(name) != null)
+            {
+                Debug.LogError(string.Format("Region collection could not be created: {0} already exists.", name));
+                MonoBehaviour.Destroy(gameObject);
+                return;
+            }
             transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
