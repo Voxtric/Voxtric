@@ -42,7 +42,7 @@ namespace VoxelEngine.MonoBehaviours
             Initialise(new IntVec3(3, 3, 3), "Test Region 1");
         }
 
-        private void UnloadRegion(IntVec3 dataPosition)
+        public void UnloadRegion(IntVec3 dataPosition)
         {
             Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
             _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
@@ -109,9 +109,8 @@ namespace VoxelEngine.MonoBehaviours
                 {
                     for (int z = 0; z < dimensions.z; z++)
                     {
-                        Region region = CreateRegion(new IntVec3(x, y, z));
-                        region.GenerateMesh();
-                        _regions[x, y, z] = region;
+                        Region region = CreateRegion(x, y, z);
+                        region.QueueMeshGeneration();
                     }
                 }
             }
@@ -124,11 +123,12 @@ namespace VoxelEngine.MonoBehaviours
             _concaveShapes.position = _convexShapes.position;
         }
 
-        public Region CreateRegion(IntVec3 dataPosition)
+        public Region CreateRegion(int x, int y, int z)
         {
             Region region = ((GameObject)Instantiate(regionPrefab)).GetComponent<Region>();
-            region.Initialise(dataPosition, this);
+            region.Initialise(new IntVec3(x, y, z), this);
             _regionsLoaded++;
+            _regions[x, y, z] = region;
             return region;
         }
     }
