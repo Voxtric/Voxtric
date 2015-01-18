@@ -28,9 +28,18 @@ namespace VoxelEngine.MonoBehaviours
         Region[,,] _regions;
         private IntVec3 _dimensions;
 
+        private Transform _convexShapes;
+        private Transform _concaveShapes;
+
         public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
+        }
+
+        private void Update()
+        {
+            _concaveShapes.position = _convexShapes.position;
+            _concaveShapes.rotation = _convexShapes.rotation;
         }
 
         private void Start()
@@ -86,10 +95,12 @@ namespace VoxelEngine.MonoBehaviours
 
         public void Initialise(IntVec3 dimensions, string name)
         {
-            gameObject.name = name;
+            transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
+            _convexShapes = transform.GetChild(0);
+            _concaveShapes = transform.GetChild(1);
 
             for (int x = 0; x < dimensions.x; x++)
             {

@@ -48,7 +48,7 @@ namespace VoxelEngine.MonoBehaviours
             _convexCollider = GetComponent<MeshCollider>();
 
             _regionCollection = regionCollection;
-            transform.parent = _regionCollection.transform;
+            transform.parent = _regionCollection.transform.GetChild(0);
             transform.localRotation = new Quaternion();
             transform.localPosition = (Vector3)dataPosition * VoxelData.SIZE;
 
