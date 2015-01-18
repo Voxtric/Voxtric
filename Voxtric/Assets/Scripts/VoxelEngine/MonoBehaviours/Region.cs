@@ -48,7 +48,7 @@ namespace VoxelEngine.MonoBehaviours
             _convexCollider = GetComponent<MeshCollider>();
 
             _regionCollection = regionCollection;
-            transform.parent = regionCollection.transform;
+            transform.parent = regionCollection.transform.GetChild(1);
             transform.localRotation = new Quaternion();
             transform.localPosition = (Vector3)dataPosition * VoxelData.SIZE;
 
@@ -86,12 +86,7 @@ namespace VoxelEngine.MonoBehaviours
 
             _convexCollider.sharedMesh = null;
             _convexCollider.sharedMesh = _mesh;
-            _concaveCollider.UpdateCollider(_mesh, this);
-        }
-
-        public ColliderInfo GetColliderInfo()
-        {
-            return new ColliderInfo(_vertices, _triangles);
+            _concaveCollider.UpdateCollider(_mesh);
         }
 
         private void LateUpdate()

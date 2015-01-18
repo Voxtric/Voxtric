@@ -69,7 +69,8 @@ namespace VoxelEngine.MonoBehaviours
             if (_displayGUI)
             {
                 GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}", (int)(1.0f / Time.smoothDeltaTime)));
-                GUI.Label(new Rect(3, 3, 300, 20), string.Format("Regions in memory: {0}", RegionCollection.totalLoadedRegions));
+                int totalLoaded = RegionCollection.totalLoadedRegions;
+                GUI.Label(new Rect(3, 3, 300, 20), string.Format("Regions in memory: {0} ({1} voxels)", totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3)));
             }
         }
 
@@ -79,7 +80,7 @@ namespace VoxelEngine.MonoBehaviours
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Region Collection")))
             {
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
-                Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.up;
+                Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
                 VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
             }

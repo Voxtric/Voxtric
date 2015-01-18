@@ -96,7 +96,7 @@ namespace VoxelEngine.MonoBehaviours
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
-            _positionPointer.parent = transform;
+            _positionPointer.parent = transform.GetChild(0);
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
             for (int x = 0; x < dimensions.x; x++)
             {
@@ -111,6 +111,12 @@ namespace VoxelEngine.MonoBehaviours
                 }
             }
             allCollections.Add(this);
+        }
+
+        private void FixedUpdate()
+        {
+            transform.GetChild(0).rotation = transform.GetChild(1).rotation;
+            transform.GetChild(0).position = transform.GetChild(1).position;
         }
 
         public Region CreateRegion(IntVec3 dataPosition)

@@ -119,91 +119,76 @@ namespace VoxelEngine.Hidden
 
         private void GenerateRegion(System.Object regionAsObject)
         {
-            _vertices.Clear();
-            _triangles.Clear();
-            _uv.Clear();
-            _faceCount = 0;
-            Region region = (Region)regionAsObject;
-            for (int x = 0; x < VoxelData.SIZE; x++)
+            lock (_vertices)
             {
-                for (int y = 0; y < VoxelData.SIZE; y++)
+                _vertices.Clear();
+                _triangles.Clear();
+                _uv.Clear();
+                _faceCount = 0;
+                Region region = (Region)regionAsObject;
+                for (int x = 0; x < VoxelData.SIZE; x++)
                 {
-                    for (int z = 0; z < VoxelData.SIZE; z++)
+                    for (int y = 0; y < VoxelData.SIZE; y++)
                     {
-                        Block block = region.GetBlock(x, y, z);
-                        if (block.visible == 1)
+                        for (int z = 0; z < VoxelData.SIZE; z++)
                         {
-                            if (x + 1 < VoxelData.SIZE)
+                            Block block = region.GetBlock(x, y, z);
+                            if (block.visible == 1)
                             {
-                                if (region.GetBlock(x + 1, y, z).visible == 0)
+                                if (x + 1 < VoxelData.SIZE)
                                 {
-                                    CubeEast(x, y, z, block.ID);
+                                    if (region.GetBlock(x + 1, y, z).visible == 0)
+                                    {
+                                        CubeEast(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeEast(x, y, z, block.ID);
-                            }
-                            if (x - 1 >= 0)
-                            {
-                                if (region.GetBlock(x - 1, y, z).visible == 0)
+                                //else { CubeEast(x, y, z, block.ID); }
+                                if (x - 1 >= 0)
                                 {
-                                    CubeWest(x, y, z, block.ID);
+                                    if (region.GetBlock(x - 1, y, z).visible == 0)
+                                    {
+                                        CubeWest(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeWest(x, y, z, block.ID);
-                            }
-                            if (y + 1 < VoxelData.SIZE)
-                            {
-                                if (region.GetBlock(x, y + 1, z).visible == 0)
+                                //else { CubeWest(x, y, z, block.ID); }
+                                if (y + 1 < VoxelData.SIZE)
                                 {
-                                    CubeTop(x, y, z, block.ID);
+                                    if (region.GetBlock(x, y + 1, z).visible == 0)
+                                    {
+                                        CubeTop(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeTop(x, y, z, block.ID);
-                            }
-                            if (y - 1 >= 0)
-                            {
-                                if (region.GetBlock(x, y - 1, z).visible == 0)
+                                //else { CubeTop(x, y, z, block.ID); }
+                                if (y - 1 >= 0)
                                 {
-                                    CubeBottom(x, y, z, block.ID);
+                                    if (region.GetBlock(x, y - 1, z).visible == 0)
+                                    {
+                                        CubeBottom(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeBottom(x, y, z, block.ID);
-                            }
-                            if (z + 1 < VoxelData.SIZE)
-                            {
-                                if (region.GetBlock(x, y, z + 1).visible == 0)
+                                //else { CubeBottom(x, y, z, block.ID); }
+                                if (z + 1 < VoxelData.SIZE)
                                 {
-                                    CubeNorth(x, y, z, block.ID);
+                                    if (region.GetBlock(x, y, z + 1).visible == 0)
+                                    {
+                                        CubeNorth(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeNorth(x, y, z, block.ID);
-                            }
-                            if (z - 1 >= 0)
-                            {
-                                if (region.GetBlock(x, y, z - 1).visible == 0)
+                                //else { CubeNorth(x, y, z, block.ID); }
+                                if (z - 1 >= 0)
                                 {
-                                    CubeSouth(x, y, z, block.ID);
+                                    if (region.GetBlock(x, y, z - 1).visible == 0)
+                                    {
+                                        CubeSouth(x, y, z, block.ID);
+                                    }
                                 }
-                            }
-                            else
-                            {
-                                CubeSouth(x, y, z, block.ID);
+                                //else { CubeSouth(x, y, z, block.ID); }
                             }
                         }
                     }
                 }
+                region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
             }
-            region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
         }
 
         public void GenerateMesh(Region region)

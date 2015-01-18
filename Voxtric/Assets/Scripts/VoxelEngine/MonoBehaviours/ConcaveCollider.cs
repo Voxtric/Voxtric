@@ -19,19 +19,20 @@ namespace VoxelEngine.MonoBehaviours
             _collider = GetComponent<MeshCollider>();
         }
 
-        public void UpdateCollider(Mesh mesh, Region region)
+        public void UpdateCollider(Mesh mesh)
         {
             _collider.sharedMesh = null;
             _collider.sharedMesh = mesh;
-            if (mesh.vertexCount > 0)
-            {
-                Physics.IgnoreCollision(_collider, region.collider);
-            }
         }
 
         public RegionCollection GetRegionCollection()
         {
             return _regionCollection;
+        }
+
+        private void OnCollisionEnter(Collision collision)
+        {
+            print(name + " collided with " + collision.collider.name);
         }
     }
 }
