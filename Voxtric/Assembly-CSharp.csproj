@@ -48,6 +48,7 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\VoxelEngine\Block.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGenerator.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGeneratorInfo.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureDetails.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\TextureFinder.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\VoxelData.cs" />

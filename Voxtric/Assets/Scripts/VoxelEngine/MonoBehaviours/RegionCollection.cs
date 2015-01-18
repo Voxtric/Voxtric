@@ -29,6 +29,9 @@ namespace VoxelEngine.MonoBehaviours
         private IntVec3 _dimensions;
         Transform _positionPointer;
 
+        private Transform _concaveShapes;
+        private Transform _convexShapes;
+
         public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
@@ -95,8 +98,10 @@ namespace VoxelEngine.MonoBehaviours
             transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
+            _concaveShapes = transform.GetChild(0);
+            _convexShapes = transform.GetChild(1);
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
-            _positionPointer.parent = transform.GetChild(0);
+            _positionPointer.parent = _concaveShapes;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
             for (int x = 0; x < dimensions.x; x++)
             {
@@ -115,8 +120,8 @@ namespace VoxelEngine.MonoBehaviours
 
         private void FixedUpdate()
         {
-            transform.GetChild(0).rotation = transform.GetChild(1).rotation;
-            transform.GetChild(0).position = transform.GetChild(1).position;
+            _concaveShapes.rotation = _convexShapes.rotation;
+            _concaveShapes.position = _convexShapes.position;
         }
 
         public Region CreateRegion(IntVec3 dataPosition)

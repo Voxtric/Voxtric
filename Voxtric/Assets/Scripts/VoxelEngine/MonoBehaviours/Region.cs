@@ -35,7 +35,7 @@ namespace VoxelEngine.MonoBehaviours
 
         public void GenerateMesh()
         {
-            _meshGenerator.GenerateMesh(this);
+            _meshGenerator.GenerateMesh(new MeshGeneratorInfo(this, _regionCollection, _voxelData.GetDataPosition()));
         }
 
         public void Initialise(IntVec3 dataPosition, RegionCollection regionCollection)

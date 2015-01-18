@@ -19,6 +19,11 @@ namespace VoxelEngine.Hidden
             LoadData(loadFrom);
         }
 
+        public IntVec3 GetDataPosition()
+        {
+            return _dataPosition;
+        }
+
         public ushort GetData(int x, int y, int z)
         {
             if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
