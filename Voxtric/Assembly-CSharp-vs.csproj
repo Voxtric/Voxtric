@@ -55,6 +55,7 @@
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec2.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ApplicationInitialiser.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ConcaveCollider.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Debugger.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Region.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\RegionCollection.cs" />

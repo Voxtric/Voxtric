@@ -39,7 +39,7 @@ namespace VoxelEngine.MonoBehaviours
 
         private void Start()
         {
-            Initialise(new IntVec3(20, 20, 20), "Test Region 1");
+            Initialise(new IntVec3(3, 3, 3), "Test Region 1");
         }
 
         private void UnloadRegion(IntVec3 dataPosition)

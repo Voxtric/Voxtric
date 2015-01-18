@@ -1,10 +1,15 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
+using System;
 
 namespace VoxelEngine.MonoBehaviours
 {
     public sealed class Region : MonoBehaviour
     {
+        [SerializeField]
+        private GameObject _concaveColliderPrefab = null;
+        private ConcaveCollider _concaveCollider;
+
         private VoxelData _voxelData;
         private MeshGenerator _meshGenerator;
         private RegionCollection _regionCollection;
@@ -14,7 +19,7 @@ namespace VoxelEngine.MonoBehaviours
         private Vector2[] _uv;
 
         private Mesh _mesh;
-        private MeshCollider _collider;
+        private MeshCollider _convexCollider;
         private bool _requiresUpdate = false;
         private bool _blockChanged = false;
 
@@ -40,12 +45,15 @@ namespace VoxelEngine.MonoBehaviours
             _voxelData = new VoxelData(dataPosition, regionCollection.collectionDirectory);
             _meshGenerator = new MeshGenerator();
             _mesh = GetComponent<MeshFilter>().mesh;
-            _collider = GetComponent<MeshCollider>();
+            _convexCollider = GetComponent<MeshCollider>();
 
             _regionCollection = regionCollection;
             transform.parent = _regionCollection.transform;
             transform.localRotation = new Quaternion();
             transform.localPosition = (Vector3)dataPosition * VoxelData.SIZE;
+
+            _concaveCollider = ((GameObject)Instantiate(_concaveColliderPrefab)).GetComponent<ConcaveCollider>();
+            _concaveCollider.Initialise(dataPosition, regionCollection);
         }
 
         public void SetMeshInformation(Vector3[] vertices, int[] triangles, Vector2[] uv)
@@ -76,8 +84,9 @@ namespace VoxelEngine.MonoBehaviours
             //_mesh.Optimize();
             _mesh.RecalculateNormals();
 
-            _collider.sharedMesh = null;
-            _collider.sharedMesh = _mesh;
+            _convexCollider.sharedMesh = null;
+            _convexCollider.sharedMesh = _mesh;
+            _concaveCollider.UpdateCollider(_mesh);
         }
 
         public ColliderInfo GetColliderInfo()
