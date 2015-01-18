@@ -27,10 +27,6 @@ namespace VoxelEngine.MonoBehaviours
 
         Region[,,] _regions;
         private IntVec3 _dimensions;
-        private MeshGenerator _meshGenerator;
-
-        private Mesh _mesh;
-        private MeshCollider _collider;
 
         public string collectionDirectory
         {
@@ -93,9 +89,6 @@ namespace VoxelEngine.MonoBehaviours
             gameObject.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
-            _meshGenerator = new MeshGenerator();
-            _mesh = new Mesh();
-            _collider = GetComponent<MeshCollider>();
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
 
             for (int x = 0; x < dimensions.x; x++)
