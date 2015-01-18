@@ -21,7 +21,7 @@ namespace VoxelEngine.MonoBehaviours
         private Mesh _mesh;
         private MeshCollider _convexCollider;
         private bool _requiresUpdate = false;
-        private bool _blockChanged = false;
+        private bool _requiresGeneration = false;
 
         public void LoadVoxelData(string collectionDirectory)
         {
@@ -72,7 +72,72 @@ namespace VoxelEngine.MonoBehaviours
         public void SetBlock(int x, int y, int z, Block block)
         {
             _voxelData.SetData(x, y, z, (ushort)block);
-            _blockChanged = true;
+            QueueMeshGeneration();
+
+            Region region;
+            IntVec3 dataPosition = _voxelData.GetDataPosition();
+            if (x == 0)
+            {
+                if (dataPosition.x > 0)
+                {
+                    region = _regionCollection.GetRegion(dataPosition.x - 1, dataPosition.y, dataPosition.z);
+                    if (region != null)
+                    {
+                        region.QueueMeshGeneration();
+                    }
+                }
+            }
+            else if (x == VoxelData.SIZE - 1 && dataPosition.x < _regionCollection.GetDimensions().x - 1)
+            {
+                region = _regionCollection.GetRegion(dataPosition.x + 1, dataPosition.y, dataPosition.z);
+                if (region != null)
+                {
+                    region.QueueMeshGeneration();
+                }
+            }
+            if (y == 0)
+            {
+                if (dataPosition.y > 0)
+                {
+                    region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y - 1, dataPosition.z);
+                    if (region != null)
+                    {
+                        region.QueueMeshGeneration();
+                    }
+                }
+            }
+            else if (y == VoxelData.SIZE - 1 && dataPosition.y < _regionCollection.GetDimensions().y - 1)
+            {
+                region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y + 1, dataPosition.z);
+                if (region != null)
+                {
+                    region.QueueMeshGeneration();
+                }
+            }
+            if (z == 0)
+            {
+                if (dataPosition.z > 0)
+                {
+                    region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y, dataPosition.z - 1);
+                    if (region != null)
+                    {
+                        region.QueueMeshGeneration();
+                    }
+                }
+            }
+            else if (z == VoxelData.SIZE - 1 && dataPosition.z < _regionCollection.GetDimensions().z - 1)
+            {
+                region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y, dataPosition.z + 1);
+                if (region != null)
+                {
+                    region.QueueMeshGeneration();
+                }
+            }
+        }
+
+        public void QueueMeshGeneration()
+        {
+            _requiresGeneration = true;
         }
 
         private void UpdateMesh()
@@ -96,10 +161,10 @@ namespace VoxelEngine.MonoBehaviours
                 UpdateMesh();
                 _requiresUpdate = false;
             }
-            else if (_blockChanged)
+            else if (_requiresGeneration)
             {
                 GenerateMesh();
-                _blockChanged = false;
+                _requiresGeneration = false;
             }
         }
     }
