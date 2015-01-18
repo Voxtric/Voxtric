@@ -27,19 +27,11 @@ namespace VoxelEngine.MonoBehaviours
 
         Region[,,] _regions;
         private IntVec3 _dimensions;
-
-        private Transform _convexShapes;
-        private Transform _concaveShapes;
+        Transform _positionPointer;
 
         public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
-        }
-
-        private void Update()
-        {
-            _concaveShapes.position = _convexShapes.position;
-            _concaveShapes.rotation = _convexShapes.rotation;
         }
 
         private void Start()
@@ -93,33 +85,28 @@ namespace VoxelEngine.MonoBehaviours
             return _regionsLoaded;
         }
 
+        public Transform GetPositionPointer()
+        {
+            return _positionPointer;
+        }
+
         public void Initialise(IntVec3 dimensions, string name)
         {
             transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
+            _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
+            _positionPointer.parent = transform;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
-            _convexShapes = transform.GetChild(0);
-            _concaveShapes = transform.GetChild(1);
-
             for (int x = 0; x < dimensions.x; x++)
             {
                 for (int y = 0; y < dimensions.y; y++)
                 {
                     for (int z = 0; z < dimensions.z; z++)
                     {
-                        _regions[x, y, z] = CreateRegion(new IntVec3(x, y, z));
-                    }
-                }
-            }
-
-            for (int x = 0; x < dimensions.x; x++)
-            {
-                for (int y = 0; y < dimensions.y; y++)
-                {
-                    for (int z = 0; z < dimensions.z; z++)
-                    {
-                        _regions[x, y, z].GenerateMesh();
+                        Region region = CreateRegion(new IntVec3(x, y, z));
+                        region.GenerateMesh();
+                        _regions[x, y, z] = region;
                     }
                 }
             }

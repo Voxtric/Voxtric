@@ -79,7 +79,7 @@ namespace VoxelEngine.MonoBehaviours
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Region Collection")))
             {
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
-                Vector3 position = hit.point + (hit.normal * -0.5f) + Vector3.up;
+                Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
                 VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
             }
