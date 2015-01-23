@@ -2,8 +2,8 @@
 {
     public struct Block
     {
-        public byte ID;
-        public byte visible;
+        public readonly byte ID;
+        public readonly byte visible;
         public byte health;
 
         public Block(ushort data)
