@@ -31,7 +31,7 @@
 
         public static explicit operator string(Block block)
         {
-            return string.Format("ID{0},Visible{1},Health{2}", block.ID, block.visible, block.health);
+            return string.Format("ID:{0}, Visible:{1}, Health:{2}", block.ID, block.visible, block.health);
         }
     }
 }
