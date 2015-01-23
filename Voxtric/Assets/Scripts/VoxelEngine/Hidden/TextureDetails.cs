@@ -2,8 +2,8 @@
 {
     public struct TextureDetails
     {
-        public IntVec2 origin;
-        public IntVec2 dimensions;
+        public readonly IntVec2 origin;
+        public readonly IntVec2 dimensions;
 
         public TextureDetails(IntVec2 origin, IntVec2 dimensions)
         {

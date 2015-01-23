@@ -13,8 +13,7 @@ namespace VoxelEngine.Hidden
 
         private static void SetTextureDetails(byte block, byte xOrigin, byte yOrigin, byte xDimension, byte yDimension)
         {
-            _textureDetails[block].origin = new IntVec2(xOrigin, yOrigin);
-            _textureDetails[block].dimensions = new IntVec2(xDimension, yDimension);
+            _textureDetails[block] = new TextureDetails(new IntVec2(xOrigin, yOrigin), new IntVec2(xDimension, yDimension));
         }
 
         public static void AssignAllTextureDetails()
