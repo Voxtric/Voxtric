@@ -3,11 +3,14 @@ using VoxelEngine.MonoBehaviours;
 using VoxelEngine.Hidden;
 using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace VoxelEngine
 {
     public static class VoxelEdit
     {
+        private const int MAX_ITERATIONS = 25;
+
         public static IntVec3 WorldToDataPosition(RegionCollection regionCollection, Vector3 worldPosition)
         {
             Transform transform = regionCollection.GetPositionPointer();
@@ -18,39 +21,108 @@ namespace VoxelEngine
         public static void ChangeAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
         {
             DataPoints points = new DataPoints(dataPosition);
-            regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z).SetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, block);
+            Region region = regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z);
+            region.SetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, block);
         }
 
         public static Block GetAt(RegionCollection regionCollection, IntVec3 dataPosition)
         {
             DataPoints points = new DataPoints(dataPosition);
-            return regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z).GetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z);
+            Region region = regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z);
+            if (!ReferenceEquals(region, null))
+            {
+                return region.GetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z);
+            }
+            return new Block();
         }
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
         {
-            SplitCheckInfo info = (SplitCheckInfo)splitCheckInfo;
-            TrimUnwantedPoints(info.regionCollection, info.points);
-            Debug.Log(info.points.Count);
+            RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
+            List<IntVec3> points = ((SplitCheckInfo)splitCheckInfo).points;
+            TrimBadPoints(regionCollection, points);
+
+            while (points.Count > 0)
+            {
+                List<IntVec3> toCheck = new List<IntVec3> { points[0] };
+                List<IntVec3> newPoints = new List<IntVec3>();
+                List<IntVec3> oldPoints = new List<IntVec3>();
+                int iterations = 0;
+                int checks = 0;
+                while (toCheck.Count > 0)
+                {
+                    if (points.Count == 0)
+                    {
+                        Debug.Log(string.Format("Found all points with {0} iterations and {1} checks.", iterations, checks));
+                        break;
+                    }
+                    else if (iterations == MAX_ITERATIONS)
+                    {
+                        Debug.LogWarning(string.Format("Unable to complete split check after {0} iterations and {1} checks; attempting check from different point.", iterations, checks));
+                        break;
+                    }
+                    iterations++;
+                    foreach (IntVec3 point in toCheck)
+                    {
+                        checks++;
+                        if (GetAt(regionCollection, point).visible == 1)
+                        {
+                            if (points.Contains(point))
+                            {
+                                points.Remove(point);
+                            }
+                            IntVec3 newPoint = point + IntVec3.right;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                            newPoint = point + IntVec3.left;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                            newPoint = point + IntVec3.forward;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                            newPoint = point + IntVec3.back;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                            newPoint = point + IntVec3.up;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                            newPoint = point + IntVec3.down;
+                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
+                            {
+                                newPoints.Add(newPoint);
+                            }
+                        }
+                    }
+                    oldPoints = toCheck;
+                    toCheck = newPoints;
+                    newPoints = new List<IntVec3>();
+                }
+            }
         }
 
-        private static void TrimUnwantedPoints(RegionCollection regionCollection, List<IntVec3> points)
+        private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)
         {
             for (int i = 0; i < points.Count; i++)
             {
                 IntVec3 point = points[i];
                 IntVec3 dimensions = regionCollection.GetDimensions() * VoxelData.SIZE;
-                if (point.x < 0 || point.y < 0 || point.z < 0 || point.x >= dimensions.x || point.y >= dimensions.y || point.z >= dimensions.z)
-                {
-                    points.RemoveAt(i);
-                    i--;
-                }
-                else if (GetAt(regionCollection, point).visible == 0)
+                if (point.x < 0 || point.y < 0 || point.z < 0 || point.x >= dimensions.x || point.y >= dimensions.y || point.z >= dimensions.z || GetAt(regionCollection, point).visible == 0)
                 {
                     points.RemoveAt(i);
                     i--;
