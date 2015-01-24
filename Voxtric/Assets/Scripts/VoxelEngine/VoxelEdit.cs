@@ -47,22 +47,24 @@ namespace VoxelEngine
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
             List<IntVec3> points = ((SplitCheckInfo)splitCheckInfo).points;
             TrimBadPoints(regionCollection, points);
+            //List<IntVec3> toMove = new List<IntVec3>();
 
             while (points.Count > 0)
             {
-                List<IntVec3> toCheck = new List<IntVec3> { points[0] };
+                IntVec3 startingPoint = points[0];
+                List<IntVec3> toCheck = new List<IntVec3> { startingPoint };
                 List<IntVec3> newPoints = new List<IntVec3>();
                 List<IntVec3> oldPoints = new List<IntVec3>();
                 int iterations = 0;
                 int checks = 0;
                 while (toCheck.Count > 0)
                 {
-                    if (points.Count == 0)
+                    /*if (points.Count == 0)
                     {
                         Debug.Log(string.Format("Found all points with {0} iterations and {1} checks.", iterations, checks));
                         break;
                     }
-                    else if (iterations == MAX_ITERATIONS)
+                    else */if (iterations == MAX_ITERATIONS)
                     {
                         Debug.LogWarning(string.Format("Unable to complete split check after {0} iterations and {1} checks; attempting check from different point.", iterations, checks));
                         break;
@@ -73,7 +75,7 @@ namespace VoxelEngine
                         checks++;
                         if (GetAt(regionCollection, point).visible == 1)
                         {
-                            if (points.Contains(point))
+                            if (point != startingPoint && points.Contains(point))
                             {
                                 points.Remove(point);
                             }
