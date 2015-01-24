@@ -18,11 +18,14 @@ namespace VoxelEngine
             return new IntVec3((int)transform.localPosition.x, (int)transform.localPosition.y, (int)transform.localPosition.z);
         }
 
-        public static void ChangeAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
+        public static void SetAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
         {
             DataPoints points = new DataPoints(dataPosition);
             Region region = regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z);
-            region.SetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, block);
+            if (!ReferenceEquals(region, null))
+            {
+                region.SetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, block);
+            }
         }
 
         public static Block GetAt(RegionCollection regionCollection, IntVec3 dataPosition)
@@ -127,11 +130,13 @@ namespace VoxelEngine
                 if (toMove.Count > 0)
                 {
                     Debug.Log(string.Format("{0} voxels to be moved.", toMove.Count));
-                    foreach (IntVec3 point in toMove)
+                    ushort[] dataToMove = new ushort[toMove.Count];
+                    for (int i = 0; i < toMove.Count; i++)
                     {
-                        //Debug.Log((string)point);
+                        dataToMove[i] = (ushort)GetAt(regionCollection, toMove[i]);
+                        SetAt(regionCollection, toMove[i], new Block());
                     }
-                    toMove.Clear();
+                    regionCollection.SetPositionsToSplit(toMove.ToArray(), dataToMove);
                 }
             }
             //Debug.Log(string.Format("Found {0} different collections.", foundCollections));

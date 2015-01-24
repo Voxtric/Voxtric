@@ -88,7 +88,7 @@ namespace VoxelEngine.Hidden
                 saveFile.Close();
             }
             //The following is purely for debugging purposes.
-            else
+            /*else
             {
                 for (int x = 0; x < SIZE; x++)
                 {
@@ -107,7 +107,7 @@ namespace VoxelEngine.Hidden
                         }
                     }
                 }
-            }
+            }*/
         }
     }
 }

@@ -83,7 +83,7 @@ namespace VoxelEngine.MonoBehaviours
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
-                VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
+                VoxelEdit.SetAt(regionCollection, changePosition, new Block());
 
                 List<IntVec3> points = new List<IntVec3>(6)
                 {
@@ -100,7 +100,7 @@ namespace VoxelEngine.MonoBehaviours
 
         private void RegisterInputs()
         {
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButton(0))
             {
                 ChangeAtCursor();
             }

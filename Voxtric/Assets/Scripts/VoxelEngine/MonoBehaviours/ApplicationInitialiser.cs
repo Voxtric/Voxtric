@@ -12,6 +12,8 @@ namespace VoxelEngine.MonoBehaviours
         {
             SetUpDirectories();
             TextureFinder.AssignAllTextureDetails();
+            RegionCollection.regionCollectionPrefab = (GameObject)Resources.Load("Region Collection");
+            RegionCollection.CreateRegionCollection(Vector3.zero, Vector3.zero, new IntVec3(3, 3, 3), "Test Region 1");
         }
 
         private static void SetUpDirectories()

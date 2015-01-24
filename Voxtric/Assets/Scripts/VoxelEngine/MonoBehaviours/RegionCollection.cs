@@ -21,6 +21,16 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
+        public static GameObject regionCollectionPrefab; 
+        public static RegionCollection CreateRegionCollection(Vector3 position, Vector3 eularAngles, IntVec3 dimensions, string name)
+        {
+            GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab);
+            RegionCollection regionCollection = regionCollectionObj.GetComponent<RegionCollection>();
+            regionCollection.Initialise(position, eularAngles, dimensions, name);
+            allCollections.Add(regionCollection);
+            return regionCollection;
+        }
+
         [SerializeField]
         private GameObject regionPrefab = null;
         private int _regionsLoaded = 0;
@@ -32,14 +42,13 @@ namespace VoxelEngine.MonoBehaviours
         private Transform _concaveShapes;
         private Transform _convexShapes;
 
+        private Queue<IntVec3[]> _dataPositionArrays = new Queue<IntVec3[]>();
+        private Queue<ushort[]> _dataArrays = new Queue<ushort[]>();
+        private int _breakOffs = 0;
+
         public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
-        }
-
-        private void Start()
-        {
-            Initialise(new IntVec3(3, 3, 3), "Test Region 1");
         }
 
         public void UnloadRegion(IntVec3 dataPosition)
@@ -93,7 +102,7 @@ namespace VoxelEngine.MonoBehaviours
             return _positionPointer;
         }
 
-        public void Initialise(IntVec3 dimensions, string name)
+        public void Initialise(Vector3 position, Vector3 eurlarAngles, IntVec3 dimensions, string name)
         {
             if (GameObject.Find(name) != null)
             {
@@ -106,6 +115,8 @@ namespace VoxelEngine.MonoBehaviours
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
             _concaveShapes = transform.GetChild(0);
             _convexShapes = transform.GetChild(1);
+            _convexShapes.localEulerAngles = eurlarAngles;
+            _convexShapes.localPosition = position;
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
             _positionPointer.parent = _concaveShapes;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
@@ -127,6 +138,33 @@ namespace VoxelEngine.MonoBehaviours
         {
             _concaveShapes.rotation = _convexShapes.rotation;
             _concaveShapes.position = _convexShapes.position;
+        }
+
+        public void SetPositionsToSplit(IntVec3[] dataPositions, ushort[] data)
+        {
+            lock (_dataPositionArrays)
+            {
+                _dataPositionArrays.Enqueue(dataPositions);
+                _dataArrays.Enqueue(data);
+            }
+        }
+
+        private void LateUpdate()
+        {
+            lock (_dataPositionArrays)
+            {
+                while (_dataPositionArrays.Count > 0)
+                {
+                    IntVec3[] positions = _dataPositionArrays.Dequeue();
+                    ushort[] data = _dataArrays.Dequeue();
+                    _breakOffs++;
+                    RegionCollection regionCollection = RegionCollection.CreateRegionCollection(_convexShapes.position, _convexShapes.eulerAngles, _dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
+                    for (int i = 0; i < positions.Length; i++)
+                    {
+                        VoxelEdit.SetAt(regionCollection, positions[i], new Block(data[i]));
+                    }
+                }
+            }
         }
 
         public Region CreateRegion(int x, int y, int z)
