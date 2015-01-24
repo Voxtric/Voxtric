@@ -36,7 +36,7 @@ namespace VoxelEngine
             {
                 return region.GetBlock(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z);
             }
-            return new Block();
+            return new Block(0, 1, 0);
         }
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
@@ -129,7 +129,7 @@ namespace VoxelEngine
                 foundCollections++;
                 if (toMove.Count > 0)
                 {
-                    Debug.Log(string.Format("{0} voxels to be moved.", toMove.Count));
+                    //Debug.Log(string.Format("{0} voxels to be moved.", toMove.Count));
                     ushort[] dataToMove = new ushort[toMove.Count];
                     for (int i = 0; i < toMove.Count; i++)
                     {

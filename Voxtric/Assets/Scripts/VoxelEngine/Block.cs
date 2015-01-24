@@ -13,10 +13,10 @@
             health = (byte)((data & 65024) >> 9);
         }
 
-        public Block(byte ID, byte transparent, byte health)
+        public Block(byte ID, byte visible, byte health)
         {
             this.ID = ID;
-            this.visible = transparent;
+            this.visible = visible;
             this.health = health;
         }
 

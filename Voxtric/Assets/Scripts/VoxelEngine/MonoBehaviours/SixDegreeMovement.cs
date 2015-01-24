@@ -6,6 +6,7 @@ namespace VoxelEngine.MonoBehaviours
     {
         private Transform _transform;
         private float _rotationY = 0f;
+        private const float SPEED = 0.5f;
 
         private void Awake()
         {
@@ -32,27 +33,27 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (Input.GetKey(KeyCode.E))
             {
-                _transform.position += _transform.up;
+                _transform.position += (_transform.up * SPEED);
             }
             else if (Input.GetKey(KeyCode.Q))
             {
-                _transform.position -= _transform.up;
+                _transform.position -= (_transform.up * SPEED);
             }
             if (Input.GetKey(KeyCode.W))
             {
-                _transform.position += _transform.forward;
+                _transform.position += (_transform.forward * SPEED);
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                _transform.position -= _transform.forward;
+                _transform.position -= (_transform.forward * SPEED);
             }
             if (Input.GetKey(KeyCode.D))
             {
-                _transform.position += _transform.right;
+                _transform.position += (_transform.right * SPEED);
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                _transform.position -= _transform.right;
+                _transform.position -= (_transform.right * SPEED);
             }
         }
 
