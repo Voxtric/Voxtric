@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
+using System.Collections.Generic;
 
 namespace VoxelEngine.MonoBehaviours
 {
@@ -83,12 +84,16 @@ namespace VoxelEngine.MonoBehaviours
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
                 VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
+                List<IntVec3> points = new List<IntVec3>
+                {
+                    new IntVec3(changePosition.x - 1, changePosition.y, changePosition.z)
+                };
             }
         }
 
         private void RegisterInputs()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 ChangeAtCursor();
             }

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.MonoBehaviours;
 using VoxelEngine.Hidden;
+using System.Collections.Generic;
 
 namespace VoxelEngine
 {
@@ -34,6 +35,11 @@ namespace VoxelEngine
                 zRegionIndex++;
             }
             regionCollection.GetRegion(xRegionIndex, yRegionIndex, zRegionIndex).SetBlock(dataPosition.x, dataPosition.y, dataPosition.z, block);
+        }
+
+        public static void SplitOffFrom(List<IntVec3> points)
+        {
+
         }
     }
 }
