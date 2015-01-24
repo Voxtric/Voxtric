@@ -21,12 +21,13 @@ namespace VoxelEngine
 
         public static IntVec3 operator +(IntVec3 first, IntVec3 second) { return new IntVec3(first.x + second.x, first.y + second.y, first.z + second.z); }
         public static IntVec3 operator -(IntVec3 first, IntVec3 second) { return new IntVec3(first.x - second.x, first.y - second.y, first.z - second.z); }
+        public static IntVec3 operator *(IntVec3 first, int num) { return new IntVec3(first.x * num, first.y * num, first.z * num); }
 
         public static IntVec3 one { get { return new IntVec3(1, 1, 1); } }
-        public static IntVec3 east { get { return new IntVec3(1, 0, 0);} }
-        public static IntVec3 west { get { return new IntVec3(-1, 0, 0); } }
-        public static IntVec3 north { get { return new IntVec3(0, 0, 1); } }
-        public static IntVec3 south { get { return new IntVec3(0, 0, -1); } }
+        public static IntVec3 right { get { return new IntVec3(1, 0, 0);} }
+        public static IntVec3 left { get { return new IntVec3(-1, 0, 0); } }
+        public static IntVec3 forward { get { return new IntVec3(0, 0, 1); } }
+        public static IntVec3 back { get { return new IntVec3(0, 0, -1); } }
         public static IntVec3 up { get { return new IntVec3(0, 1, 0); } }
         public static IntVec3 down { get { return new IntVec3(0, -1, 0); } }
     }

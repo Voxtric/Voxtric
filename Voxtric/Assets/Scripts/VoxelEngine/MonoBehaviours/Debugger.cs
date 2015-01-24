@@ -84,10 +84,17 @@ namespace VoxelEngine.MonoBehaviours
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
                 VoxelEdit.ChangeAt(regionCollection, changePosition, new Block());
-                List<IntVec3> points = new List<IntVec3>
+
+                List<IntVec3> points = new List<IntVec3>(6)
                 {
-                    new IntVec3(changePosition.x - 1, changePosition.y, changePosition.z)
+                    changePosition + IntVec3.right,
+                    changePosition + IntVec3.left,
+                    changePosition + IntVec3.forward,
+                    changePosition + IntVec3.back,
+                    changePosition + IntVec3.up,
+                    changePosition + IntVec3.down
                 };
+                VoxelEdit.CheckCollectionSplit(regionCollection, points);
             }
         }
 
