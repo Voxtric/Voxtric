@@ -38,8 +38,8 @@ namespace VoxelEngine
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
-            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
@@ -47,7 +47,10 @@ namespace VoxelEngine
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
             List<IntVec3> points = ((SplitCheckInfo)splitCheckInfo).points;
             TrimBadPoints(regionCollection, points);
-            //List<IntVec3> toMove = new List<IntVec3>();
+
+            List<IntVec3> toMove = new List<IntVec3>();
+            int foundCollections = 0;
+            bool split = false;
 
             while (points.Count > 0)
             {
@@ -59,14 +62,17 @@ namespace VoxelEngine
                 int checks = 0;
                 while (toCheck.Count > 0)
                 {
-                    /*if (points.Count == 0)
+                    if (points.Count == 1 && !split)
                     {
-                        Debug.Log(string.Format("Found all points with {0} iterations and {1} checks.", iterations, checks));
+                        toMove.Clear();
+                        //Debug.Log(string.Format("Found all points with {0} iterations and {1} checks.", iterations, checks));
                         break;
                     }
-                    else */if (iterations == MAX_ITERATIONS)
+                    else if (iterations == MAX_ITERATIONS)
                     {
-                        Debug.LogWarning(string.Format("Unable to complete split check after {0} iterations and {1} checks; attempting check from different point.", iterations, checks));
+                        split = true;
+                        toMove.Clear();
+                        //Debug.LogWarning(string.Format("Unable to complete split check after {0} iterations and {1} checks; attempting check from different point.", iterations, checks));
                         break;
                     }
                     iterations++;
@@ -75,6 +81,7 @@ namespace VoxelEngine
                         checks++;
                         if (GetAt(regionCollection, point).visible == 1)
                         {
+                            toMove.Add(point);
                             if (point != startingPoint && points.Contains(point))
                             {
                                 points.Remove(point);
@@ -115,7 +122,19 @@ namespace VoxelEngine
                     toCheck = newPoints;
                     newPoints = new List<IntVec3>();
                 }
+                points.Remove(startingPoint);
+                foundCollections++;
+                if (toMove.Count > 0)
+                {
+                    Debug.Log(string.Format("{0} voxels to be moved.", toMove.Count));
+                    foreach (IntVec3 point in toMove)
+                    {
+                        //Debug.Log((string)point);
+                    }
+                    toMove.Clear();
+                }
             }
+            //Debug.Log(string.Format("Found {0} different collections.", foundCollections));
         }
 
         private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)
