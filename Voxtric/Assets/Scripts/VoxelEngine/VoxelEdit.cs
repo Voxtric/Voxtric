@@ -9,7 +9,7 @@ namespace VoxelEngine
 {
     public static class VoxelEdit
     {
-        private const int MAX_ITERATIONS = 25;
+        private const int MAX_ITERATIONS = 100;
 
         public static IntVec3 WorldToDataPosition(RegionCollection regionCollection, Vector3 worldPosition)
         {
@@ -41,8 +41,8 @@ namespace VoxelEngine
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
-            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
@@ -60,7 +60,7 @@ namespace VoxelEngine
             int iterationCalls = 0;
             while (finders.Count > 1)
             {
-                if (iterationCalls > 100)
+                if (iterationCalls > MAX_ITERATIONS)
                 {
                     Debug.LogError("Split check could not be completed: Area too large");
                     break;

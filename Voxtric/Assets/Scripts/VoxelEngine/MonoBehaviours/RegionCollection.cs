@@ -27,7 +27,6 @@ namespace VoxelEngine.MonoBehaviours
             GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab);
             RegionCollection regionCollection = regionCollectionObj.GetComponent<RegionCollection>();
             regionCollection.Initialise(position, eularAngles, dimensions, name);
-            allCollections.Add(regionCollection);
             return regionCollection;
         }
 
