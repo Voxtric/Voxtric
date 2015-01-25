@@ -31,7 +31,7 @@ namespace VoxelEngine.Hidden
         {
             foreach (DataSplitFinder finder in _finders)
             {
-                if (finder != toIgnore && !_findersToRemove.Contains(finder) && finder.ContainsPosition(position))
+                if (!ReferenceEquals(finder, toIgnore) && !_findersToRemove.Contains(finder) && finder.ContainsPosition(position))
                 {
                     return finder;
                 }

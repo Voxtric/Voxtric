@@ -80,7 +80,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (x < 0 || y < 0 || z < 0 || x >= _dimensions.x || y >= _dimensions.y || z >= _dimensions.z)
             {
-                Debug.LogError(string.Format("Region could not be retrieved: {0} is not a valid data position.", new IntVec3(x, y, z)));
+                Debug.LogError(string.Format("Region could not be retrieved: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return null;
             }
             return _regions[x, y, z];
