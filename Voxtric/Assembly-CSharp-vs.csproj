@@ -48,6 +48,8 @@
   <ItemGroup>
      <Compile Include="Assets\Scripts\VoxelEngine\Block.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\DataPoints.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\DataSplitFinder.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\Hidden\DataSplitInfo.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGenerator.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\MeshGeneratorInfo.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\SplitCheckInfo.cs" />

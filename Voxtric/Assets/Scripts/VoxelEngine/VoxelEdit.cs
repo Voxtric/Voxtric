@@ -48,10 +48,34 @@ namespace VoxelEngine
         private static void CheckSplit(System.Object splitCheckInfo)
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
-            List<IntVec3> points = ((SplitCheckInfo)splitCheckInfo).points;
-            TrimBadPoints(regionCollection, points);
+            List<IntVec3> startPositions = ((SplitCheckInfo)splitCheckInfo).positions;
+            TrimBadPoints(regionCollection, startPositions);
+            List<DataSplitFinder> finders = new List<DataSplitFinder>();
+            List<DataSplitFinder> findersToRemove = new List<DataSplitFinder>();
+            foreach (IntVec3 position in startPositions)
+            {
+                finders.Add(new DataSplitFinder(position, regionCollection, finders, findersToRemove));
+            }
 
+            int iterationCalls = 0;
+            while (finders.Count > 0)
+            {
+                foreach (DataSplitFinder finder in finders)
+                {
+                    if (!findersToRemove.Contains(finder))
+                    {
+                        iterationCalls++;
+                        finder.Iterate();
+                    }
+                }
+                foreach (DataSplitFinder finder in findersToRemove)
+                {
+                    finders.Remove(finder);
+                }
+            }
+            Debug.Log(string.Format("{0} iteraction calls made.", iterationCalls));
 
+            //regionCollection.SetPositionsToSplit(positionsToMove, dataToMove);
         }
 
         private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)

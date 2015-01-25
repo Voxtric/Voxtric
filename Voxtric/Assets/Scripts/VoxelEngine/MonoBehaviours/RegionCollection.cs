@@ -163,9 +163,10 @@ namespace VoxelEngine.MonoBehaviours
                     {
                         VoxelEdit.SetAt(regionCollection, positions[i], data[i]);
                     }
-                    regionCollection.transform.GetChild(1).rigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;
-                    regionCollection.transform.GetChild(1).rigidbody.velocity = _convexShapes.rigidbody.velocity;
-                    regionCollection.transform.GetChild(1).rigidbody.angularVelocity = _convexShapes.rigidbody.angularVelocity;
+                    Rigidbody newRigidbody = regionCollection.transform.GetChild(1).rigidbody;
+                    newRigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;
+                    newRigidbody.velocity = _convexShapes.rigidbody.velocity;
+                    newRigidbody.rigidbody.angularVelocity = _convexShapes.rigidbody.angularVelocity;
                 }
             }
         }
