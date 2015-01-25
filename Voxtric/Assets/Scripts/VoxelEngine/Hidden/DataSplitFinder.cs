@@ -43,14 +43,18 @@ namespace VoxelEngine.Hidden
         {
             if (VoxelEdit.GetAt(_regionCollection, position).visible == 1)
             {
-                DataSplitFinder finder = FinderFound(position, this);
-                if (!ReferenceEquals(finder, null))
+                IntVec3 dimensions = _regionCollection.GetDimensions() * VoxelData.SIZE;
+                if (position.x >= 0 && position.y >= 0 && position.z >= 0 && position.x < dimensions.x && position.y < dimensions.y && position.z < dimensions.z)
                 {
-                    MergeLists(finder);
-                }
-                else if (!ContainsPosition(position))
-                {
-                    _newPositions.Add(position);
+                    DataSplitFinder finder = FinderFound(position, this);
+                    if (!ReferenceEquals(finder, null))
+                    {
+                        MergeLists(finder);
+                    }
+                    else if (!ContainsPosition(position))
+                    {
+                        _newPositions.Add(position);
+                    }
                 }
             }
         }
