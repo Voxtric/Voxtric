@@ -6,10 +6,9 @@ namespace VoxelEngine.Hidden
 {
     public sealed class DataSplitFinder
     {
-        private IntVec3 _startPosition;
         private List<IntVec3> _found = new List<IntVec3>();
         private List<IntVec3> _confirmed = new List<IntVec3>();
-        private List<IntVec3> _newPositions;
+        private List<IntVec3> _newPositions = new List<IntVec3>();
 
         private RegionCollection _regionCollection;
         private List<DataSplitFinder> _finders;
@@ -17,7 +16,6 @@ namespace VoxelEngine.Hidden
 
         public DataSplitFinder(IntVec3 startPosition, RegionCollection regionCollection, List<DataSplitFinder> finders, List<DataSplitFinder> findersToRemove)
         {
-            _startPosition = startPosition;
             _regionCollection = regionCollection;
             _finders = finders;
             _findersToRemove = findersToRemove;
@@ -26,14 +24,14 @@ namespace VoxelEngine.Hidden
 
         public bool ContainsPosition(IntVec3 position)
         {
-            return /*_found.Contains(position) || */_confirmed.Contains(position);
+            return _found.Contains(position) || _confirmed.Contains(position) || _newPositions.Contains(position);
         }
 
         private DataSplitFinder FinderFound(IntVec3 position, DataSplitFinder toIgnore)
         {
             foreach (DataSplitFinder finder in _finders)
             {
-                if (finder != toIgnore && finder.ContainsPosition(position))
+                if (finder != toIgnore && !_findersToRemove.Contains(finder) && finder.ContainsPosition(position))
                 {
                     return finder;
                 }
@@ -62,100 +60,27 @@ namespace VoxelEngine.Hidden
             if (_confirmed.Count == 0)
             {
                 _findersToRemove.Add(this);
-                Debug.Log("Finder finished.");
+                Block[] data = new Block[_found.Count];
+                //Debug.Log(string.Format("Finder split {0} voxels.", data.Length));
+                for (int i = 0; i < data.Length; i++)
+                {
+                    data[i] = VoxelEdit.GetAt(_regionCollection, _found[i]);
+                    VoxelEdit.SetAt(_regionCollection, _found[i], new Block());
+                }
+                _regionCollection.SetPositionsToSplit(_found.ToArray(), data);
             }
-            _newPositions = new List<IntVec3>();
-            IntVec3 newPosition;
             foreach (IntVec3 position in _confirmed)
             {
                 _found.Add(position);
-                //CheckPosition(position + IntVec3.right);
-
-                newPosition = position + IntVec3.right;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
-
-                newPosition = position + IntVec3.left;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
-
-                newPosition = position + IntVec3.forward;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
-
-                newPosition = position + IntVec3.back;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
-
-                newPosition = position + IntVec3.up;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
-
-                newPosition = position + IntVec3.down;
-                if (VoxelEdit.GetAt(_regionCollection, newPosition).visible == 1)
-                {
-                    DataSplitFinder finder = FinderFound(newPosition, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(newPosition))
-                    {
-                        _newPositions.Add(newPosition);
-                    }
-                }
+                CheckPosition(position + IntVec3.right);
+                CheckPosition(position + IntVec3.left);
+                CheckPosition(position + IntVec3.forward);
+                CheckPosition(position + IntVec3.back);
+                CheckPosition(position + IntVec3.up);
+                CheckPosition(position + IntVec3.down);
             }
             _confirmed = _newPositions;
+            _newPositions = new List<IntVec3>();
         }
 
         private void MergeLists(DataSplitFinder finder)

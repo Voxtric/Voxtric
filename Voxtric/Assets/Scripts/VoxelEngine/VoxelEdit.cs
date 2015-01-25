@@ -58,8 +58,13 @@ namespace VoxelEngine
             }
 
             int iterationCalls = 0;
-            while (finders.Count > 0)
+            while (finders.Count > 1)
             {
+                if (iterationCalls > 100)
+                {
+                    Debug.LogError("Split check could not be completed: Area too large");
+                    break;
+                }
                 foreach (DataSplitFinder finder in finders)
                 {
                     if (!findersToRemove.Contains(finder))
@@ -73,9 +78,7 @@ namespace VoxelEngine
                     finders.Remove(finder);
                 }
             }
-            Debug.Log(string.Format("{0} iteraction calls made.", iterationCalls));
-
-            //regionCollection.SetPositionsToSplit(positionsToMove, dataToMove);
+            //Debug.Log(string.Format("{0} iteration calls made.", iterationCalls));
         }
 
         private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)

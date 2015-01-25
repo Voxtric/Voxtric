@@ -100,7 +100,7 @@ namespace VoxelEngine.MonoBehaviours
 
         private void RegisterInputs()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 ChangeAtCursor();
             }
