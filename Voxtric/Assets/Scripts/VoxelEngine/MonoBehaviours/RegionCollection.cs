@@ -27,7 +27,6 @@ namespace VoxelEngine.MonoBehaviours
             GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab);
             RegionCollection regionCollection = regionCollectionObj.GetComponent<RegionCollection>();
             regionCollection.Initialise(position, eularAngles, dimensions, name);
-            allCollections.Add(regionCollection);
             return regionCollection;
         }
 
@@ -43,7 +42,7 @@ namespace VoxelEngine.MonoBehaviours
         private Transform _convexShapes;
 
         private Queue<IntVec3[]> _dataPositionArrays = new Queue<IntVec3[]>();
-        private Queue<ushort[]> _dataArrays = new Queue<ushort[]>();
+        private Queue<Block[]> _dataArrays = new Queue<Block[]>();
         private int _breakOffs = 0;
 
         public string collectionDirectory
@@ -140,7 +139,7 @@ namespace VoxelEngine.MonoBehaviours
             _concaveShapes.position = _convexShapes.position;
         }
 
-        public void SetPositionsToSplit(IntVec3[] dataPositions, ushort[] data)
+        public void SetPositionsToSplit(IntVec3[] dataPositions, Block[] data)
         {
             lock (_dataPositionArrays)
             {
@@ -156,16 +155,17 @@ namespace VoxelEngine.MonoBehaviours
                 while (_dataPositionArrays.Count > 0)
                 {
                     IntVec3[] positions = _dataPositionArrays.Dequeue();
-                    ushort[] data = _dataArrays.Dequeue();
+                    Block[] data = _dataArrays.Dequeue();
                     _breakOffs++;
                     RegionCollection regionCollection = RegionCollection.CreateRegionCollection(_convexShapes.position, _convexShapes.eulerAngles, _dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
                     for (int i = 0; i < positions.Length; i++)
                     {
-                        VoxelEdit.SetAt(regionCollection, positions[i], new Block(data[i]));
+                        VoxelEdit.SetAt(regionCollection, positions[i], data[i]);
                     }
-                    regionCollection.transform.GetChild(1).rigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;
-                    regionCollection.transform.GetChild(1).rigidbody.velocity = _convexShapes.rigidbody.velocity;
-                    regionCollection.transform.GetChild(1).rigidbody.angularVelocity = _convexShapes.rigidbody.angularVelocity;
+                    Rigidbody newRigidbody = regionCollection.transform.GetChild(1).rigidbody;
+                    newRigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;
+                    newRigidbody.velocity = _convexShapes.rigidbody.velocity;
+                    newRigidbody.rigidbody.angularVelocity = _convexShapes.rigidbody.angularVelocity;
                 }
             }
         }

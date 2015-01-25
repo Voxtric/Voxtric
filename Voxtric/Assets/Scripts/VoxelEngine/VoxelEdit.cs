@@ -9,7 +9,7 @@ namespace VoxelEngine
 {
     public static class VoxelEdit
     {
-        private const int MAX_ITERATIONS = 25;
+        private const int MAX_ITERATIONS = 100;
 
         public static IntVec3 WorldToDataPosition(RegionCollection regionCollection, Vector3 worldPosition)
         {
@@ -48,98 +48,37 @@ namespace VoxelEngine
         private static void CheckSplit(System.Object splitCheckInfo)
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
-            List<IntVec3> points = ((SplitCheckInfo)splitCheckInfo).points;
-            TrimBadPoints(regionCollection, points);
-
-            List<IntVec3> toMove = new List<IntVec3>();
-            int foundCollections = 0;
-            bool split = false;
-
-            while (points.Count > 0)
+            List<IntVec3> startPositions = ((SplitCheckInfo)splitCheckInfo).positions;
+            TrimBadPoints(regionCollection, startPositions);
+            List<DataSplitFinder> finders = new List<DataSplitFinder>();
+            List<DataSplitFinder> findersToRemove = new List<DataSplitFinder>();
+            foreach (IntVec3 position in startPositions)
             {
-                IntVec3 startingPoint = points[0];
-                List<IntVec3> toCheck = new List<IntVec3> { startingPoint };
-                List<IntVec3> newPoints = new List<IntVec3>();
-                List<IntVec3> oldPoints = new List<IntVec3>();
-                int iterations = 0;
-                int checks = 0;
-                while (toCheck.Count > 0)
+                finders.Add(new DataSplitFinder(position, regionCollection, finders, findersToRemove));
+            }
+
+            int iterationCalls = 0;
+            while (finders.Count > 1)
+            {
+                if (iterationCalls > MAX_ITERATIONS)
                 {
-                    if (points.Count == 1 && !split)
-                    {
-                        toMove.Clear();
-                        //Debug.Log(string.Format("Found all points with {0} iterations and {1} checks.", iterations, checks));
-                        break;
-                    }
-                    else if (iterations == MAX_ITERATIONS)
-                    {
-                        split = true;
-                        toMove.Clear();
-                        //Debug.LogWarning(string.Format("Unable to complete split check after {0} iterations and {1} checks; attempting check from different point.", iterations, checks));
-                        break;
-                    }
-                    iterations++;
-                    foreach (IntVec3 point in toCheck)
-                    {
-                        checks++;
-                        if (GetAt(regionCollection, point).visible == 1)
-                        {
-                            toMove.Add(point);
-                            if (point != startingPoint && points.Contains(point))
-                            {
-                                points.Remove(point);
-                            }
-                            IntVec3 newPoint = point + IntVec3.right;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                            newPoint = point + IntVec3.left;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                            newPoint = point + IntVec3.forward;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                            newPoint = point + IntVec3.back;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                            newPoint = point + IntVec3.up;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                            newPoint = point + IntVec3.down;
-                            if (!toCheck.Contains(newPoint) && !newPoints.Contains(newPoint) && !oldPoints.Contains(newPoint))
-                            {
-                                newPoints.Add(newPoint);
-                            }
-                        }
-                    }
-                    oldPoints = toCheck;
-                    toCheck = newPoints;
-                    newPoints = new List<IntVec3>();
+                    Debug.LogError("Split check could not be completed: Area too large");
+                    break;
                 }
-                points.Remove(startingPoint);
-                foundCollections++;
-                if (toMove.Count > 0)
+                foreach (DataSplitFinder finder in finders)
                 {
-                    //Debug.Log(string.Format("{0} voxels to be moved.", toMove.Count));
-                    ushort[] dataToMove = new ushort[toMove.Count];
-                    for (int i = 0; i < toMove.Count; i++)
+                    if (!findersToRemove.Contains(finder))
                     {
-                        dataToMove[i] = (ushort)GetAt(regionCollection, toMove[i]);
-                        SetAt(regionCollection, toMove[i], new Block());
+                        iterationCalls++;
+                        finder.Iterate();
                     }
-                    regionCollection.SetPositionsToSplit(toMove.ToArray(), dataToMove);
+                }
+                foreach (DataSplitFinder finder in findersToRemove)
+                {
+                    finders.Remove(finder);
                 }
             }
-            //Debug.Log(string.Format("Found {0} different collections.", foundCollections));
+            //Debug.Log(string.Format("{0} iteration calls made.", iterationCalls));
         }
 
         private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)

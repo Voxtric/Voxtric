@@ -71,7 +71,7 @@ namespace VoxelEngine.MonoBehaviours
             {
                 GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}", (int)(1.0f / Time.smoothDeltaTime)));
                 int totalLoaded = RegionCollection.totalLoadedRegions;
-                GUI.Label(new Rect(3, 3, 300, 20), string.Format("Regions in memory: {0} ({1} voxels)", totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3)));
+                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3)));
             }
         }
 
