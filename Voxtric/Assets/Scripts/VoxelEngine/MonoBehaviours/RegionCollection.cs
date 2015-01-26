@@ -78,7 +78,7 @@ namespace VoxelEngine.MonoBehaviours
 
         public Region GetRegion(int x, int y, int z)
         {
-            if (x < 0 || y < 0 || z < 0 || x >= _dimensions.x || y >= _dimensions.y || z >= _dimensions.z)
+            if (!VoxelEdit.ValidPosition(_dimensions, new IntVec3(x, y, z)))
             {
                 Debug.LogError(string.Format("Region could not be retrieved: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return null;

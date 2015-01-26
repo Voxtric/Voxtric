@@ -26,7 +26,7 @@ namespace VoxelEngine.Hidden
 
         public ushort GetData(int x, int y, int z)
         {
-            if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
+            if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
             {
                 Debug.LogError(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return (ushort)1;
@@ -36,7 +36,7 @@ namespace VoxelEngine.Hidden
 
         public void SetData(int x, int y, int z, ushort data)
         {
-            if (x < 0 || y < 0 || z < 0 || x >= SIZE || y >= SIZE || z >= SIZE)
+            if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
             {
                 Debug.LogError(string.Format("Voxel data could not be set: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
                 return;

@@ -18,6 +18,15 @@ namespace VoxelEngine
             return new IntVec3((int)transform.localPosition.x, (int)transform.localPosition.y, (int)transform.localPosition.z);
         }
 
+        public static bool ValidPosition(IntVec3 dimensions, IntVec3 position)
+        {
+            if (position.x >= 0 && position.y >= 0 && position.z >= 0 && position.x < dimensions.x && position.y < dimensions.y && position.z < dimensions.z)
+            {
+                return true;
+            }
+            return false;
+        }
+
         public static void SetAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
         {
             DataPoints points = new DataPoints(dataPosition);
@@ -81,15 +90,15 @@ namespace VoxelEngine
             //Debug.Log(string.Format("{0} iteration calls made.", iterationCalls));
         }
 
-        private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> points)
+        private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> positions)
         {
-            for (int i = 0; i < points.Count; i++)
+            for (int i = 0; i < positions.Count; i++)
             {
-                IntVec3 point = points[i];
+                IntVec3 position = positions[i];
                 IntVec3 dimensions = regionCollection.GetDimensions() * VoxelData.SIZE;
-                if (point.x < 0 || point.y < 0 || point.z < 0 || point.x >= dimensions.x || point.y >= dimensions.y || point.z >= dimensions.z || GetAt(regionCollection, point).visible == 0)
+                if (!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0)
                 {
-                    points.RemoveAt(i);
+                    positions.RemoveAt(i);
                     i--;
                 }
             }
