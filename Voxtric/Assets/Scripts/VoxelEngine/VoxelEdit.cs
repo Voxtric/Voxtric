@@ -71,8 +71,7 @@ namespace VoxelEngine
             {
                 if (iterationCalls > MAX_ITERATIONS)
                 {
-                    Debug.LogError("Split check could not be completed: Area too large");
-                    break;
+                    throw new OperationCanceledException("Split too large to calculate.");
                 }
                 foreach (DataSplitFinder finder in finders)
                 {
@@ -95,8 +94,7 @@ namespace VoxelEngine
             for (int i = 0; i < positions.Count; i++)
             {
                 IntVec3 position = positions[i];
-                IntVec3 dimensions = regionCollection.GetDimensions() * VoxelData.SIZE;
-                if (!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0)
+                if (/*!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || */GetAt(regionCollection, position).visible == 0)
                 {
                     positions.RemoveAt(i);
                     i--;

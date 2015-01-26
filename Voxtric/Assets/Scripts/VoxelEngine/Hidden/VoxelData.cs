@@ -28,8 +28,7 @@ namespace VoxelEngine.Hidden
         {
             if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
             {
-                Debug.LogError(string.Format("Voxel data could not be retrieved so false value was provided: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
-                return (ushort)1;
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
             }
             return _data[x, y, z];
         }
@@ -38,8 +37,7 @@ namespace VoxelEngine.Hidden
         {
             if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
             {
-                Debug.LogError(string.Format("Voxel data could not be set: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
-                return;
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
             }
             _data[x, y, z] = data;
         }

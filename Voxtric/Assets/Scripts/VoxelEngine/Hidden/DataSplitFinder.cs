@@ -41,7 +41,7 @@ namespace VoxelEngine.Hidden
 
         private void CheckPosition(IntVec3 position)
         {
-            if (VoxelEdit.ValidPosition(_regionCollection.GetDimensions() * VoxelData.SIZE, position) && VoxelEdit.GetAt(_regionCollection, position).visible == 1)
+            if (/*VoxelEdit.ValidPosition(_regionCollection.GetDimensions() * VoxelData.SIZE, position) && */VoxelEdit.GetAt(_regionCollection, position).visible == 1)
             {
                 DataSplitFinder finder = FinderFound(position, this);
                 if (!ReferenceEquals(finder, null))

@@ -2,6 +2,7 @@
 using VoxelEngine.Hidden;
 using System.Collections.Generic;
 using System.IO;
+using System;
 
 namespace VoxelEngine.MonoBehaviours
 {
@@ -24,6 +25,10 @@ namespace VoxelEngine.MonoBehaviours
         public static GameObject regionCollectionPrefab; 
         public static RegionCollection CreateRegionCollection(Vector3 position, Vector3 eularAngles, IntVec3 dimensions, string name)
         {
+            if (GameObject.Find(name) != null)
+            {
+                throw new ArgumentException(string.Format("Region called {0} already exists", name), "name");
+            }
             GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab);
             RegionCollection regionCollection = regionCollectionObj.GetComponent<RegionCollection>();
             regionCollection.Initialise(position, eularAngles, dimensions, name);
@@ -79,10 +84,11 @@ namespace VoxelEngine.MonoBehaviours
 
         public Region GetRegion(int x, int y, int z)
         {
-            if (!VoxelEdit.ValidPosition(_dimensions, new IntVec3(x, y, z)))
+            IntVec3 dataPlace = new IntVec3(x, y, z);
+            if (!VoxelEdit.ValidPosition(_dimensions, dataPlace))
             {
-                Debug.LogError(string.Format("Region could not be retrieved: {0} is not a valid data position.", (string)new IntVec3(x, y, z)));
-                return null;
+                //return null;
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid region position.", (string)dataPlace));
             }
             return _regions[x, y, z];
         }
@@ -104,12 +110,6 @@ namespace VoxelEngine.MonoBehaviours
 
         public void Initialise(Vector3 position, Vector3 eurlarAngles, IntVec3 dimensions, string name)
         {
-            if (GameObject.Find(name) != null)
-            {
-                Debug.LogError(string.Format("Region collection could not be created: {0} already exists.", name));
-                MonoBehaviour.Destroy(gameObject);
-                return;
-            }
             transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
