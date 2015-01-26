@@ -51,6 +51,11 @@ namespace VoxelEngine.MonoBehaviours
             _concaveCollider.Initialise(dataPosition, regionCollection);
         }
 
+        public void DestroyConcaveCollider()
+        {
+            MonoBehaviour.Destroy(_concaveCollider.gameObject);
+        }
+
         public void SetMeshInformation(Vector3[] vertices, int[] triangles, Vector2[] uv)
         {
             _vertices = vertices;

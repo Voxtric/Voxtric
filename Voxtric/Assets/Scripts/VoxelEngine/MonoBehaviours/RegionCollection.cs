@@ -54,6 +54,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
             _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
+            region.DestroyConcaveCollider();
             MonoBehaviour.Destroy(region.gameObject);
             _regionsLoaded--;
         }
