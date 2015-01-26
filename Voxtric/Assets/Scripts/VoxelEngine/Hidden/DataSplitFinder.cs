@@ -8,6 +8,7 @@ namespace VoxelEngine.Hidden
     {
         private List<IntVec3> _found = new List<IntVec3>();
         private List<IntVec3> _confirmed = new List<IntVec3>();
+        private List<IntVec3> _lastConfirmed = new List<IntVec3>();
         private List<IntVec3> _newPositions = new List<IntVec3>();
 
         private RegionCollection _regionCollection;
@@ -24,7 +25,7 @@ namespace VoxelEngine.Hidden
 
         public bool ContainsPosition(IntVec3 position)
         {
-            return _found.Contains(position) || _confirmed.Contains(position) || _newPositions.Contains(position);
+            return /*_found.Contains(position) || */_confirmed.Contains(position);
         }
 
         private DataSplitFinder FinderFound(IntVec3 position, DataSplitFinder toIgnore)
@@ -48,7 +49,7 @@ namespace VoxelEngine.Hidden
                 {
                     MergeLists(finder);
                 }
-                else if (!ContainsPosition(position))
+                else if (!_lastConfirmed.Contains(position) && !_confirmed.Contains(position) && !_newPositions.Contains(position))
                 {
                     _newPositions.Add(position);
                 }
@@ -79,6 +80,7 @@ namespace VoxelEngine.Hidden
                 CheckPosition(position + IntVec3.up);
                 CheckPosition(position + IntVec3.down);
             }
+            _lastConfirmed = _confirmed;
             _confirmed = _newPositions;
             _newPositions = new List<IntVec3>();
         }
