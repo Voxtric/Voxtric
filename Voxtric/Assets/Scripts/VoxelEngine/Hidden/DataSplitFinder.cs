@@ -41,20 +41,16 @@ namespace VoxelEngine.Hidden
 
         private void CheckPosition(IntVec3 position)
         {
-            if (VoxelEdit.GetAt(_regionCollection, position).visible == 1)
+            if (VoxelEdit.ValidPosition(_regionCollection.GetDimensions() * VoxelData.SIZE, position) && VoxelEdit.GetAt(_regionCollection, position).visible == 1)
             {
-                IntVec3 dimensions = _regionCollection.GetDimensions() * VoxelData.SIZE;
-                if (position.x >= 0 && position.y >= 0 && position.z >= 0 && position.x < dimensions.x && position.y < dimensions.y && position.z < dimensions.z)
+                DataSplitFinder finder = FinderFound(position, this);
+                if (!ReferenceEquals(finder, null))
                 {
-                    DataSplitFinder finder = FinderFound(position, this);
-                    if (!ReferenceEquals(finder, null))
-                    {
-                        MergeLists(finder);
-                    }
-                    else if (!ContainsPosition(position))
-                    {
-                        _newPositions.Add(position);
-                    }
+                    MergeLists(finder);
+                }
+                else if (!ContainsPosition(position))
+                {
+                    _newPositions.Add(position);
                 }
             }
         }
