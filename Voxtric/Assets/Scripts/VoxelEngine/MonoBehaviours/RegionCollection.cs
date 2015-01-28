@@ -71,6 +71,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
             _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
+            region.SaveVoxelData(collectionDirectory);
             region.DestroyConcaveCollider();
             MonoBehaviour.Destroy(region.gameObject);
             _regionsLoaded--;
@@ -121,14 +122,14 @@ namespace VoxelEngine.MonoBehaviours
             return _positionPointer;
         }
 
-        public void Initialise(Vector3 position, Vector3 eurlarAngles, IntVec3 dimensions, string name)
+        public void Initialise(Vector3 position, Vector3 eularAngles, IntVec3 dimensions, string name)
         {
             transform.name = name;
             _dimensions = dimensions;
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
             _concaveShapes = transform.GetChild(0);
             _convexShapes = transform.GetChild(1);
-            _convexShapes.localEulerAngles = eurlarAngles;
+            _convexShapes.localEulerAngles = eularAngles;
             _convexShapes.localPosition = position;
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
             _positionPointer.parent = _concaveShapes;

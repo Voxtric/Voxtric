@@ -42,9 +42,29 @@ namespace VoxelEngine.Hidden
             return null;
         }
 
+        public static void SortFindersList(List<DataSplitFinder> finders)
+        {
+            DataSplitFinder tempFinder;
+            int changes = 1;
+            while (changes != 0)
+            {
+                changes = 0;
+                for (int i = 1; i < finders.Count; i++)
+                {
+                    if (finders[i].GetVoxelCount() < finders[i - 1].GetVoxelCount())
+                    {
+                        tempFinder = finders[i];
+                        finders[i] = finders[i - 1];
+                        finders[i - 1] = tempFinder;
+                        changes++;
+                    }
+                }
+            }
+        }
+
         private void CheckPosition(IntVec3 position)
         {
-            if (/*VoxelEdit.ValidPosition(_regionCollection.GetDimensions() * VoxelData.SIZE, position) && */VoxelEdit.GetAt(_regionCollection, position).visible == 1)
+            if (VoxelEdit.ValidPosition(_regionCollection.GetDimensions() * VoxelData.SIZE, position) && VoxelEdit.GetAt(_regionCollection, position).visible == 1)
             {
                 DataSplitFinder finder = FinderFound(position, this);
                 if (!ReferenceEquals(finder, null))

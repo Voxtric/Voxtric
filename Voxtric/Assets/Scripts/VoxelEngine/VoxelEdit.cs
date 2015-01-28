@@ -54,26 +54,6 @@ namespace VoxelEngine
             CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
-        private static void SortFindersList(List<DataSplitFinder> finders)
-        {
-            DataSplitFinder tempFinder;
-            int changes = 1;
-            while (changes != 0)
-            {
-                changes = 0;
-                for (int i = 1; i < finders.Count; i++)
-                {
-                    if (finders[i].GetVoxelCount() < finders[i - 1].GetVoxelCount())
-                    {
-                        tempFinder = finders[i];
-                        finders[i] = finders[i - 1];
-                        finders[i - 1] = tempFinder;
-                        changes++;
-                    }
-                }
-            }
-        }
-
         private static void CheckSplit(System.Object splitCheckInfo)
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
@@ -101,7 +81,7 @@ namespace VoxelEngine
             }
             if (finders.Count > 1)
             {
-                SortFindersList(finders);
+                DataSplitFinder.SortFindersList(finders);
             }
             DataSplitFinder iteratingFinder;
             while (finders.Count > 1)
@@ -120,7 +100,7 @@ namespace VoxelEngine
                 iterationCalls++;
                 if (finders.Count > 1 && iteratingFinder.GetVoxelCount() > finders[1].GetVoxelCount())
                 {
-                    SortFindersList(finders);
+                    DataSplitFinder.SortFindersList(finders);
                 }
 
                 foreach (DataSplitFinder finder in findersToRemove)

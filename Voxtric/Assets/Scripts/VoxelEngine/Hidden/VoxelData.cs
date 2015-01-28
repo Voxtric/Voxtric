@@ -32,7 +32,7 @@ namespace VoxelEngine.Hidden
             }
             catch (IndexOutOfRangeException)
             {
-                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", (string)new IntVec3(x, y, z)));
             }
         }
 
@@ -44,7 +44,7 @@ namespace VoxelEngine.Hidden
             }
             catch (IndexOutOfRangeException)
             {
-                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", (string)new IntVec3(x, y, z)));
             }
         }
 
