@@ -26,20 +26,26 @@ namespace VoxelEngine.Hidden
 
         public ushort GetData(int x, int y, int z)
         {
-            if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
+            try
+            {
+                return _data[x, y, z];
+            }
+            catch (IndexOutOfRangeException)
             {
                 throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
             }
-            return _data[x, y, z];
         }
 
         public void SetData(int x, int y, int z, ushort data)
         {
-            if (!VoxelEdit.ValidPosition(new IntVec3(SIZE, SIZE, SIZE), new IntVec3(x, y, z)))
+            try
+            {
+                _data[x, y, z] = data;
+            }
+            catch (IndexOutOfRangeException)
             {
                 throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid data position", new IntVec3(x, y, z)));
             }
-            _data[x, y, z] = data;
         }
 
         public void SaveData(string collectionDirectory)

@@ -22,10 +22,22 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
+        public static bool CollectionExists(string name)
+        {
+            for (int i = 0; i < allCollections.Count; i++)
+            {
+                if (allCollections[i].name == name)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
         public static GameObject regionCollectionPrefab; 
         public static RegionCollection CreateRegionCollection(Vector3 position, Vector3 eularAngles, IntVec3 dimensions, string name)
         {
-            if (GameObject.Find(name) != null)
+            if (CollectionExists(name))
             {
                 throw new ArgumentException(string.Format("Region called {0} already exists", name), "name");
             }
@@ -84,13 +96,14 @@ namespace VoxelEngine.MonoBehaviours
 
         public Region GetRegion(int x, int y, int z)
         {
-            IntVec3 dataPlace = new IntVec3(x, y, z);
-            if (!VoxelEdit.ValidPosition(_dimensions, dataPlace))
+            try
             {
-                //return null;
-                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid region position.", (string)dataPlace));
+                return _regions[x, y, z];
             }
-            return _regions[x, y, z];
+            catch (IndexOutOfRangeException)
+            {
+                throw new ArgumentOutOfRangeException("X, Y, Z co-ordinates", string.Format("{0} is not a valid region position.", (string)new IntVec3(x, y, z)));
+            }
         }
 
         public IntVec3 GetDimensions()
