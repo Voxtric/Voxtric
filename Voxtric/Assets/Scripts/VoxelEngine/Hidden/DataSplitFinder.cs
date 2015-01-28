@@ -15,6 +15,8 @@ namespace VoxelEngine.Hidden
         private List<DataSplitFinder> _finders;
         private List<DataSplitFinder> _findersToRemove;
 
+        private int _voxelCount = 0;
+
         public DataSplitFinder(IntVec3 startPosition, RegionCollection regionCollection, List<DataSplitFinder> finders, List<DataSplitFinder> findersToRemove)
         {
             _regionCollection = regionCollection;
@@ -25,7 +27,7 @@ namespace VoxelEngine.Hidden
 
         public bool ContainsPosition(IntVec3 position)
         {
-            return /*_found.Contains(position) || */_confirmed.Contains(position);
+            return _confirmed.Contains(position);
         }
 
         private DataSplitFinder FinderFound(IntVec3 position, DataSplitFinder toIgnore)
@@ -56,13 +58,17 @@ namespace VoxelEngine.Hidden
             }
         }
 
+        public int GetVoxelCount()
+        {
+            return _voxelCount;
+        }
+
         public void Iterate()
         {
             if (_confirmed.Count == 0)
             {
                 _findersToRemove.Add(this);
                 Block[] data = new Block[_found.Count];
-                //Debug.Log(string.Format("Finder split {0} voxels.", data.Length));
                 for (int i = 0; i < data.Length; i++)
                 {
                     data[i] = VoxelEdit.GetAt(_regionCollection, _found[i]);
@@ -73,6 +79,7 @@ namespace VoxelEngine.Hidden
             foreach (IntVec3 position in _confirmed)
             {
                 _found.Add(position);
+                _voxelCount++;
                 CheckPosition(position + IntVec3.right);
                 CheckPosition(position + IntVec3.left);
                 CheckPosition(position + IntVec3.forward);

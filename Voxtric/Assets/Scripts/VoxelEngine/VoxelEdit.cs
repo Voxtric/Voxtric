@@ -1,9 +1,9 @@
-﻿using UnityEngine;
-using VoxelEngine.MonoBehaviours;
-using VoxelEngine.Hidden;
+﻿using System;
 using System.Collections.Generic;
 using System.Threading;
-using System;
+using UnityEngine;
+using VoxelEngine.Hidden;
+using VoxelEngine.MonoBehaviours;
 
 namespace VoxelEngine
 {
@@ -54,6 +54,26 @@ namespace VoxelEngine
             CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
+        private static void SortFindersList(List<DataSplitFinder> finders)
+        {
+            DataSplitFinder tempFinder;
+            int changes = 1;
+            while (changes != 0)
+            {
+                changes = 0;
+                for (int i = 1; i < finders.Count; i++)
+                {
+                    if (finders[i].GetVoxelCount() < finders[i - 1].GetVoxelCount())
+                    {
+                        tempFinder = finders[i];
+                        finders[i] = finders[i - 1];
+                        finders[i - 1] = tempFinder;
+                        changes++;
+                    }
+                }
+            }
+        }
+
         private static void CheckSplit(System.Object splitCheckInfo)
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
@@ -67,26 +87,47 @@ namespace VoxelEngine
             }
 
             int iterationCalls = 0;
+            foreach (DataSplitFinder finder in finders)
+            {
+                if (!findersToRemove.Contains(finder))
+                {
+                    iterationCalls++;
+                    finder.Iterate();
+                }
+            }
+            foreach (DataSplitFinder finder in findersToRemove)
+            {
+                finders.Remove(finder);
+            }
+            if (finders.Count > 1)
+            {
+                SortFindersList(finders);
+            }
+            DataSplitFinder iteratingFinder;
             while (finders.Count > 1)
             {
                 if (iterationCalls > MAX_ITERATIONS)
                 {
-                    throw new OperationCanceledException("Split too large to calculate.");
-                }
-                foreach (DataSplitFinder finder in finders)
-                {
-                    if (!findersToRemove.Contains(finder))
+                    string voxelCounts = "";
+                    foreach (DataSplitFinder finder in finders)
                     {
-                        iterationCalls++;
-                        finder.Iterate();
+                        voxelCounts = string.Format("{0}{1}, ", voxelCounts, finder.GetVoxelCount());
                     }
+                    throw new OperationCanceledException(string.Format("Split too large to calculate with voxel counts of {0} and iteration count of {1}.", voxelCounts.Substring(0, voxelCounts.Length - 3), iterationCalls));
                 }
+                iteratingFinder = finders[0];
+                iteratingFinder.Iterate();
+                iterationCalls++;
+                if (finders.Count > 1 && iteratingFinder.GetVoxelCount() > finders[1].GetVoxelCount())
+                {
+                    SortFindersList(finders);
+                }
+
                 foreach (DataSplitFinder finder in findersToRemove)
                 {
                     finders.Remove(finder);
                 }
             }
-            //Debug.Log(string.Format("{0} iteration calls made.", iterationCalls));
         }
 
         private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> positions)
@@ -94,7 +135,7 @@ namespace VoxelEngine
             for (int i = 0; i < positions.Count; i++)
             {
                 IntVec3 position = positions[i];
-                if (/*!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || */GetAt(regionCollection, position).visible == 0)
+                if (GetAt(regionCollection, position).visible == 0)
                 {
                     positions.RemoveAt(i);
                     i--;
