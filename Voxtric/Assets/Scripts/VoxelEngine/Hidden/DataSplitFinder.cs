@@ -118,6 +118,7 @@ namespace VoxelEngine.Hidden
             _found.AddRange(info.found);
             _newPositions.AddRange(info.confirmed);
             _findersToRemove.Add(finder);
+            _voxelCount += finder.GetVoxelCount();
         }
 
         public DataSplitInfo GetFinderInfo()
