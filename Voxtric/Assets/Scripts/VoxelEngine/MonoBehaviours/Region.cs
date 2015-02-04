@@ -215,7 +215,7 @@ namespace VoxelEngine.MonoBehaviours
                 UpdateMesh();
                 _requiresUpdate = false;
             }
-            else if (_requiresGeneration)
+            else if (_requiresGeneration && this != emptyRegion)
             {
                 _meshGenerator.GenerateMesh(new MeshGeneratorInfo(this, _regionCollection, _voxelData.GetDataPosition()));
                 _requiresGeneration = false;
