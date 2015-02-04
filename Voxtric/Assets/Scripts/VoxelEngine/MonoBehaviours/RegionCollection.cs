@@ -64,7 +64,7 @@ namespace VoxelEngine.MonoBehaviours
 
         public string collectionDirectory
         {
-            get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
+            get { return string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name); }
         }
 
         public void UnloadRegion(IntVec3 dataPosition, bool replaceWithEmpty)
@@ -142,7 +142,7 @@ namespace VoxelEngine.MonoBehaviours
             _convexShapes.localPosition = position;
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
             _positionPointer.parent = _concaveShapes;
-            Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name));
+            Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name));
             for (int x = 0; x < dimensions.x; x++)
             {
                 for (int y = 0; y < dimensions.y; y++)

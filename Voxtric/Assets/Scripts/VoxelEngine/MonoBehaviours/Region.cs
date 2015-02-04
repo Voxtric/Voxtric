@@ -28,12 +28,18 @@ namespace VoxelEngine.MonoBehaviours
 
         public void LoadVoxelData(string collectionDirectory)
         {
-            _voxelData.LoadData(collectionDirectory);
+            if (!ReferenceEquals(this, Region.emptyRegion))
+            {
+                _voxelData.LoadData(collectionDirectory);
+            }
         }
 
         public void SaveVoxelData(string collectionDirectory)
         {
-            _voxelData.SaveData(collectionDirectory);
+            if (!ReferenceEquals(this, Region.emptyRegion))
+            {
+                _voxelData.SaveData(collectionDirectory);
+            }
         }
 
         public void Initialise(IntVec3 dataPosition, RegionCollection regionCollection)

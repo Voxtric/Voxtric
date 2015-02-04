@@ -4,9 +4,10 @@ using VoxelEngine.Hidden;
 
 namespace VoxelEngine.MonoBehaviours
 {
-    public sealed class ApplicationInitialiser : MonoBehaviour
+    public sealed class SceneInitialiser : MonoBehaviour
     {
         public static string gameDirectory;
+        public static string sceneDirectory;
 
         private void Awake()
         {
@@ -20,8 +21,10 @@ namespace VoxelEngine.MonoBehaviours
         private static void SetupDirectories()
         {
             gameDirectory = Application.persistentDataPath;
+            sceneDirectory = string.Format(@"{0}\{1}", gameDirectory, Application.loadedLevelName);
             Directory.CreateDirectory(string.Format(@"{0}\Textures", gameDirectory));
-            Directory.CreateDirectory(string.Format(@"{0}\Collections", gameDirectory));
+            Directory.CreateDirectory(sceneDirectory);
+            Directory.CreateDirectory(string.Format(@"{0}\Collections", sceneDirectory));
         }
 
         private static void SetupEmptyRegion()

@@ -58,11 +58,11 @@
      <Compile Include="Assets\Scripts\VoxelEngine\Hidden\VoxelData.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec2.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\IntVec3.cs" />
-     <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ApplicationInitialiser.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\ConcaveCollider.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Debugger.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\Region.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\RegionCollection.cs" />
+     <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\SceneInitialiser.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\MonoBehaviours\SixDegreeMovement.cs" />
      <Compile Include="Assets\Scripts\VoxelEngine\VoxelEdit.cs" />
  <Reference Include="UnityEngine.UI">
