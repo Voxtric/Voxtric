@@ -28,6 +28,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             GameObject region = new GameObject("Empty region");
             Region.emptyRegion = region.AddComponent<Region>();
+            region.hideFlags = HideFlags.HideInHierarchy;
         }
     }
 }

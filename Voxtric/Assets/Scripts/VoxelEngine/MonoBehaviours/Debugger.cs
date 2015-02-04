@@ -21,7 +21,7 @@ namespace VoxelEngine.MonoBehaviours
                         for (int z = 0; z < dimensions.z; z++)
                         {
                             Region region = regionCollection.GetRegion(x, y, z);
-                            if (region != null)
+                            if (region != null && region != Region.emptyRegion)
                             {
                                 Transform regionTransform = region.GetComponent<Transform>();
                                 Vector3 position = regionTransform.position;
