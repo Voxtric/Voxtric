@@ -81,7 +81,7 @@ namespace VoxelEngine.MonoBehaviours
                 if (dataPosition.x > 0)
                 {
                     region = _regionCollection.GetRegion(dataPosition.x - 1, dataPosition.y, dataPosition.z);
-                    if (region != null)
+                    if (!ReferenceEquals(region, null))
                     {
                         region.QueueMeshGeneration();
                     }
@@ -95,7 +95,7 @@ namespace VoxelEngine.MonoBehaviours
             else if (x == VoxelData.SIZE - 1 && dataPosition.x < _regionCollection.GetDimensions().x - 1)
             {
                 region = _regionCollection.GetRegion(dataPosition.x + 1, dataPosition.y, dataPosition.z);
-                if (region != null)
+                if (!ReferenceEquals(region, null))
                 {
                     region.QueueMeshGeneration();
                 }
@@ -110,7 +110,7 @@ namespace VoxelEngine.MonoBehaviours
                 if (dataPosition.y > 0)
                 {
                     region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y - 1, dataPosition.z);
-                    if (region != null)
+                    if (!ReferenceEquals(region, null))
                     {
                         region.QueueMeshGeneration();
                     }
@@ -124,7 +124,7 @@ namespace VoxelEngine.MonoBehaviours
             else if (y == VoxelData.SIZE - 1 && dataPosition.y < _regionCollection.GetDimensions().y - 1)
             {
                 region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y + 1, dataPosition.z);
-                if (region != null)
+                if (!ReferenceEquals(region, null))
                 {
                     region.QueueMeshGeneration();
                 }
@@ -139,7 +139,7 @@ namespace VoxelEngine.MonoBehaviours
                 if (dataPosition.z > 0)
                 {
                     region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y, dataPosition.z - 1);
-                    if (region != null)
+                    if (!ReferenceEquals(region, null))
                     {
                         region.QueueMeshGeneration();
                     }
@@ -153,7 +153,7 @@ namespace VoxelEngine.MonoBehaviours
             else if (z == VoxelData.SIZE - 1 && dataPosition.z < _regionCollection.GetDimensions().z - 1)
             {
                 region = _regionCollection.GetRegion(dataPosition.x, dataPosition.y, dataPosition.z + 1);
-                if (region != null)
+                if (!ReferenceEquals(region, null))
                 {
                     region.QueueMeshGeneration();
                 }

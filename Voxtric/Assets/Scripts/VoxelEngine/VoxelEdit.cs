@@ -50,8 +50,8 @@ namespace VoxelEngine
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
-            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
