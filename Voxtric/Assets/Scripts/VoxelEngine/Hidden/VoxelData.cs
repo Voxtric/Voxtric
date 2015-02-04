@@ -106,7 +106,7 @@ namespace VoxelEngine.Hidden
                             }
                             else
                             {
-                                _data[x, y, z] = (ushort)new Block(2, 1, 0);
+                                _data[x, y, z] = (ushort)new Block(2, 1, 40);
                             }
                         }
                     }
