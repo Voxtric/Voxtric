@@ -10,17 +10,24 @@ namespace VoxelEngine.MonoBehaviours
 
         private void Awake()
         {
-            SetUpDirectories();
+            SetupDirectories();
+            SetupEmptyRegion();
             TextureFinder.AssignAllTextureDetails();
             RegionCollection.regionCollectionPrefab = (GameObject)Resources.Load("Region Collection");
             RegionCollection.CreateRegionCollection(new Vector3(-20, 20, -20), Vector3.zero, new IntVec3(3, 3, 3), "Test Region 1");
         }
 
-        private static void SetUpDirectories()
+        private static void SetupDirectories()
         {
             gameDirectory = Application.persistentDataPath;
             Directory.CreateDirectory(string.Format(@"{0}\Textures", gameDirectory));
             Directory.CreateDirectory(string.Format(@"{0}\Collections", gameDirectory));
+        }
+
+        private static void SetupEmptyRegion()
+        {
+            GameObject region = new GameObject("Empty region");
+            Region.emptyRegion = region.AddComponent<Region>();
         }
     }
 }

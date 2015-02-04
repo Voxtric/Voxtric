@@ -6,6 +6,8 @@ namespace VoxelEngine.MonoBehaviours
 {
     public sealed class Region : MonoBehaviour
     {
+        public static Region emptyRegion;
+
         [SerializeField]
         private GameObject _concaveColliderPrefab = null;
         private ConcaveCollider _concaveCollider;
@@ -17,6 +19,7 @@ namespace VoxelEngine.MonoBehaviours
         private Vector3[] _vertices;
         private int[] _triangles;
         private Vector2[] _uv;
+        private int _blocks;
 
         private Mesh _mesh;
         private MeshCollider _convexCollider;
@@ -56,11 +59,12 @@ namespace VoxelEngine.MonoBehaviours
             MonoBehaviour.Destroy(_concaveCollider.gameObject);
         }
 
-        public void SetMeshInformation(Vector3[] vertices, int[] triangles, Vector2[] uv)
+        public void SetMeshInformation(Vector3[] vertices, int[] triangles, Vector2[] uv, int blocks)
         {
             _vertices = vertices;
             _triangles = triangles;
             _uv = uv;
+            _blocks = blocks;
             _requiresUpdate = true;
         }
 
@@ -174,7 +178,14 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (_vertices.Length == 0)
             {
-                _regionCollection.UnloadRegion(_voxelData.GetDataPosition());
+                if (_blocks == 0)
+                {
+                    _regionCollection.UnloadRegion(_voxelData.GetDataPosition(), true);
+                }
+                else
+                {
+                    _regionCollection.UnloadRegion(_voxelData.GetDataPosition(), false);
+                }
             }
             else
             {

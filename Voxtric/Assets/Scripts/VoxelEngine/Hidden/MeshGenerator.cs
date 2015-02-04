@@ -126,6 +126,7 @@ namespace VoxelEngine.Hidden
                 _triangles.Clear();
                 _uv.Clear();
                 _faceCount = 0;
+                int visibleBlocks = 0;
                 MeshGeneratorInfo info = (MeshGeneratorInfo)meshInfo;
                 for (int x = 0; x < VoxelData.SIZE; x++)
                 {
@@ -136,6 +137,7 @@ namespace VoxelEngine.Hidden
                             Block block = info.region.GetBlock(x, y, z);
                             if (block.visible == 1)
                             {
+                                visibleBlocks++;
                                 if (x + 1 < VoxelData.SIZE)
                                 {
                                     if (info.region.GetBlock(x + 1, y, z).visible == 0)
@@ -248,7 +250,7 @@ namespace VoxelEngine.Hidden
                         }
                     }
                 }
-                info.region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray());
+                info.region.SetMeshInformation(_vertices.ToArray(), _triangles.ToArray(), _uv.ToArray(), visibleBlocks);
             }
         }
 

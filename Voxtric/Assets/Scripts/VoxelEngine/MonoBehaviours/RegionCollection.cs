@@ -67,10 +67,19 @@ namespace VoxelEngine.MonoBehaviours
             get { return string.Format(@"{0}\Collections\{1}", ApplicationInitialiser.gameDirectory, name); }
         }
 
-        public void UnloadRegion(IntVec3 dataPosition)
+        public void UnloadRegion(IntVec3 dataPosition, bool replaceWithEmpty)
         {
-            Region region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
-            _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
+            Region region;
+            if (!replaceWithEmpty)
+            {
+                region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
+                _regions[dataPosition.x, dataPosition.y, dataPosition.z] = null;
+            }
+            else
+            {
+                region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
+                _regions[dataPosition.x, dataPosition.y, dataPosition.z] = Region.emptyRegion;
+            }
             region.SaveVoxelData(collectionDirectory);
             region.DestroyConcaveCollider();
             MonoBehaviour.Destroy(region.gameObject);
