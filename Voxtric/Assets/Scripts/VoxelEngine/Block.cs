@@ -1,4 +1,6 @@
-﻿namespace VoxelEngine
+﻿using System;
+
+namespace VoxelEngine
 {
     public struct Block
     {
@@ -15,9 +17,22 @@
 
         public Block(byte ID, byte visible, byte health)
         {
+            if (visible > 1)
+            {
+                throw new ArgumentOutOfRangeException("visible", "Visible must be either 0 or 1");
+            }
+            else if (health > 127)
+            {
+                throw new ArgumentOutOfRangeException("health", "Health must be within range 0 - 127");
+            }
             this.ID = ID;
             this.visible = visible;
             this.health = health;
+        }
+
+        public static Block empty
+        {
+            get { return new Block(); }
         }
 
         public static implicit operator ushort(Block block)

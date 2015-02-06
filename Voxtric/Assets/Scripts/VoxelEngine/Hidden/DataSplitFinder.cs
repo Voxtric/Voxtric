@@ -92,7 +92,7 @@ namespace VoxelEngine.Hidden
                 for (int i = 0; i < data.Length; i++)
                 {
                     data[i] = VoxelEdit.GetAt(_regionCollection, _found[i]);
-                    VoxelEdit.SetAt(_regionCollection, _found[i], new Block());
+                    VoxelEdit.SetAt(_regionCollection, _found[i], Block.empty);
                 }
                 _regionCollection.SetPositionsToSplit(_found.ToArray(), data);
             }

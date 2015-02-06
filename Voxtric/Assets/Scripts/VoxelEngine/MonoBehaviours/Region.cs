@@ -85,7 +85,7 @@ namespace VoxelEngine.MonoBehaviours
             Block block = GetBlock(x, y, z);
             if (damage > block.health)
             {
-                SetBlock(x, y, z, new Block());
+                SetBlock(x, y, z, Block.empty);
                 return true;
             }
             block.health -= damage;
