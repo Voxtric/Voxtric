@@ -27,11 +27,44 @@ namespace VoxelEngine
             return false;
         }
 
-        public static bool BrokeWithDamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage)
+        private static void DamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage)
         {
-            DataPoints points = new DataPoints(dataPosition);
-            Region region = regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z);
-            return region.BrokeBlockWithDamage(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, damage);
+            DataPoints dataPoints = new DataPoints(dataPosition);
+            Region region = regionCollection.GetRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
+            if (region.BrokeBlockWithDamage(dataPoints.voxelDataPosition.x, dataPoints.voxelDataPosition.y, dataPoints.voxelDataPosition.z, damage))
+            {
+                List<IntVec3> breakPoints = new List<IntVec3>(6)
+                {
+                    dataPosition + IntVec3.right,
+                    dataPosition + IntVec3.left,
+                    dataPosition + IntVec3.forward,
+                    dataPosition + IntVec3.back,
+                    dataPosition + IntVec3.up,
+                    dataPosition + IntVec3.down
+                };
+                CheckCollectionSplit(regionCollection, breakPoints);
+            }
+        }
+
+        public static void AreaDamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage, byte radius)
+        {
+            DataPoints dataPoints = new DataPoints(dataPosition);
+            Region region = regionCollection.GetRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
+            for (int x = dataPosition.x - radius; x <= dataPosition.x + radius; x++)
+            {
+                for (int y = dataPosition.y - radius; y <= dataPosition.y + radius; y++)
+                {
+                    for (int z = dataPosition.z - radius; z <= dataPosition.z + radius; z++)
+                    {
+                        IntVec3 position = new IntVec3(x, y, z);
+                        float distance = Vector3.Distance(position, dataPosition);
+                        if (ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) && GetAt(regionCollection, position).visible == 1 && distance <= radius)
+                        {
+                            DamageAt(regionCollection, position, (byte)(damage * ((radius - distance) / radius)));
+                        }
+                    }
+                }
+            }
         }
 
         public static void SetAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
