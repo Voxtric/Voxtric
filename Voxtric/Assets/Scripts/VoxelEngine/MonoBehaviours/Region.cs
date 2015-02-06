@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using VoxelEngine.Hidden;
 using System;
+using System.Collections.Generic;
 
 namespace VoxelEngine.MonoBehaviours
 {
@@ -77,6 +78,19 @@ namespace VoxelEngine.MonoBehaviours
         public Block GetBlock(int x, int y, int z)
         {
             return new Block(_voxelData.GetData(x, y, z));
+        }
+
+        public bool BrokeBlockWithDamage(int x, int y, int z, byte damage)
+        {
+            Block block = GetBlock(x, y, z);
+            if (damage > block.health)
+            {
+                SetBlock(x, y, z, new Block());
+                return true;
+            }
+            block.health -= damage;
+            _voxelData.SetData(x, y, z, (ushort)block);
+            return false;
         }
 
         public void SetBlock(int x, int y, int z, Block block)

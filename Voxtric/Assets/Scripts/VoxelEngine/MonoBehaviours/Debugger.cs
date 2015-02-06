@@ -83,24 +83,26 @@ namespace VoxelEngine.MonoBehaviours
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
-                VoxelEdit.SetAt(regionCollection, changePosition, new Block());
-
-                List<IntVec3> points = new List<IntVec3>(6)
+                //VoxelEdit.SetAt(regionCollection, changePosition, new Block());
+                if (VoxelEdit.BrokeWithDamageAt(regionCollection, changePosition, 19))
                 {
-                    changePosition + IntVec3.right,
-                    changePosition + IntVec3.left,
-                    changePosition + IntVec3.forward,
-                    changePosition + IntVec3.back,
-                    changePosition + IntVec3.up,
-                    changePosition + IntVec3.down
-                };
-                VoxelEdit.CheckCollectionSplit(regionCollection, points);
+                    List<IntVec3> points = new List<IntVec3>(6)
+                    {
+                        changePosition + IntVec3.right,
+                        changePosition + IntVec3.left,
+                        changePosition + IntVec3.forward,
+                        changePosition + IntVec3.back,
+                        changePosition + IntVec3.up,
+                        changePosition + IntVec3.down
+                    };
+                    VoxelEdit.CheckCollectionSplit(regionCollection, points);
+                }
             }
         }
 
         private void RegisterInputs()
         {
-            if (Input.GetMouseButton(0))
+            if (Input.GetMouseButtonDown(0))
             {
                 ChangeAtCursor();
             }

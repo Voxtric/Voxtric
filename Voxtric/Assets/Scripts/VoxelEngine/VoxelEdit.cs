@@ -27,6 +27,13 @@ namespace VoxelEngine
             return false;
         }
 
+        public static bool BrokeWithDamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage)
+        {
+            DataPoints points = new DataPoints(dataPosition);
+            Region region = regionCollection.GetRegion(points.regionDataPosition.x, points.regionDataPosition.y, points.regionDataPosition.z);
+            return region.BrokeBlockWithDamage(points.voxelDataPosition.x, points.voxelDataPosition.y, points.voxelDataPosition.z, damage);
+        }
+
         public static void SetAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
         {
             DataPoints points = new DataPoints(dataPosition);
