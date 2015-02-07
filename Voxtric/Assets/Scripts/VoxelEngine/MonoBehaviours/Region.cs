@@ -77,6 +77,10 @@ namespace VoxelEngine.MonoBehaviours
 
         public Block GetBlock(int x, int y, int z)
         {
+            if (ReferenceEquals(this, emptyRegion))
+            {
+                return Block.empty;
+            }
             return new Block(_voxelData.GetData(x, y, z));
         }
 

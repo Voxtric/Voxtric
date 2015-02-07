@@ -27,44 +27,70 @@ namespace VoxelEngine
             return false;
         }
 
-        private static void DamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage)
+        private static bool BrokeWithDamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage)
         {
             DataPoints dataPoints = new DataPoints(dataPosition);
             Region region = regionCollection.GetRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
-            if (region.BrokeBlockWithDamage(dataPoints.voxelDataPosition.x, dataPoints.voxelDataPosition.y, dataPoints.voxelDataPosition.z, damage))
+            if (ReferenceEquals(region, null))
             {
-                List<IntVec3> breakPoints = new List<IntVec3>(6)
-                {
-                    dataPosition + IntVec3.right,
-                    dataPosition + IntVec3.left,
-                    dataPosition + IntVec3.forward,
-                    dataPosition + IntVec3.back,
-                    dataPosition + IntVec3.up,
-                    dataPosition + IntVec3.down
-                };
-                CheckCollectionSplit(regionCollection, breakPoints);
+                region = regionCollection.CreateRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
             }
+            return region.BrokeBlockWithDamage(dataPoints.voxelDataPosition.x, dataPoints.voxelDataPosition.y, dataPoints.voxelDataPosition.z, damage);
         }
 
-        public static void AreaDamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage, byte radius)
+        public static void DamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage, byte radius)
         {
             DataPoints dataPoints = new DataPoints(dataPosition);
             Region region = regionCollection.GetRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
-            for (int x = dataPosition.x - radius; x <= dataPosition.x + radius; x++)
+            List<IntVec3> breakPoints = new List<IntVec3>();
+            for (int x = dataPosition.x - radius + 1; x <= dataPosition.x + radius; x++)
             {
-                for (int y = dataPosition.y - radius; y <= dataPosition.y + radius; y++)
+                for (int y = dataPosition.y - radius + 1; y <= dataPosition.y + radius + 1; y++)
                 {
-                    for (int z = dataPosition.z - radius; z <= dataPosition.z + radius; z++)
+                    for (int z = dataPosition.z - radius + 1; z <= dataPosition.z + radius + 1; z++)
                     {
                         IntVec3 position = new IntVec3(x, y, z);
                         float distance = Vector3.Distance(position, dataPosition);
                         if (ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) && GetAt(regionCollection, position).visible == 1 && distance <= radius)
                         {
-                            DamageAt(regionCollection, position, (byte)(damage * ((radius - distance) / radius)));
+                            if (BrokeWithDamageAt(regionCollection, position, (byte)(damage * ((radius - distance) / radius))))
+                            {
+                                IntVec3 newPosition = position + IntVec3.right;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                                newPosition = position + IntVec3.left;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                                newPosition = position + IntVec3.forward;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                                newPosition = position + IntVec3.back;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                                newPosition = position + IntVec3.up;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                                newPosition = position + IntVec3.down;
+                                if (!breakPoints.Contains(newPosition))
+                                {
+                                    breakPoints.Add(newPosition);
+                                }
+                            }
                         }
                     }
                 }
             }
+            CheckCollectionSplit(regionCollection, breakPoints);
         }
 
         public static void SetAt(RegionCollection regionCollection, IntVec3 dataPosition, Block block)
@@ -90,8 +116,8 @@ namespace VoxelEngine
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
-            //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
+            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
@@ -111,7 +137,7 @@ namespace VoxelEngine
             {
                 if (!findersToRemove.Contains(finder))
                 {
-                    iterationCalls++;
+                    //iterationCalls++;
                     finder.Iterate();
                 }
             }
