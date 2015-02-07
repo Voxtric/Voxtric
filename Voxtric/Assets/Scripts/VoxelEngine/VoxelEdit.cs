@@ -40,8 +40,6 @@ namespace VoxelEngine
 
         public static void DamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage, byte radius)
         {
-            DataPoints dataPoints = new DataPoints(dataPosition);
-            Region region = regionCollection.GetRegion(dataPoints.regionDataPosition.x, dataPoints.regionDataPosition.y, dataPoints.regionDataPosition.z);
             List<IntVec3> breakPoints = new List<IntVec3>();
             for (int x = dataPosition.x - radius + 1; x <= dataPosition.x + radius; x++)
             {
@@ -116,8 +114,8 @@ namespace VoxelEngine
 
         public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
         {
-            //ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
-            CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
+            ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
+            //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
         }
 
         private static void CheckSplit(System.Object splitCheckInfo)
@@ -137,8 +135,8 @@ namespace VoxelEngine
             {
                 if (!findersToRemove.Contains(finder))
                 {
-                    //iterationCalls++;
                     finder.Iterate();
+                    //iterationCalls++;
                 }
             }
             foreach (DataSplitFinder finder in findersToRemove)

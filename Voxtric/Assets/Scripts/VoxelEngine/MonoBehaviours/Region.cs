@@ -87,7 +87,7 @@ namespace VoxelEngine.MonoBehaviours
         public bool BrokeBlockWithDamage(int x, int y, int z, byte damage)
         {
             Block block = GetBlock(x, y, z);
-            if (damage > block.health)
+            if (damage >= block.health)
             {
                 SetBlock(x, y, z, Block.empty);
                 return true;

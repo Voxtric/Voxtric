@@ -88,13 +88,23 @@ namespace VoxelEngine.Hidden
             if (_confirmed.Count == 0)
             {
                 _findersToRemove.Add(this);
+                int dataToRemove = 0;
                 Block[] data = new Block[_found.Count];
                 for (int i = 0; i < data.Length; i++)
                 {
-                    data[i] = VoxelEdit.GetAt(_regionCollection, _found[i]);
-                    VoxelEdit.SetAt(_regionCollection, _found[i], Block.empty);
+                    Block block = VoxelEdit.GetAt(_regionCollection, _found[i]);
+                    if (block.visible == 1)
+                    {
+                        dataToRemove++;
+                        data[i] = block;
+                        VoxelEdit.SetAt(_regionCollection, _found[i], Block.empty);
+                    }
                 }
-                _regionCollection.SetPositionsToSplit(_found.ToArray(), data);
+                if (dataToRemove > 0)
+                {
+                    _regionCollection.SetPositionsToSplit(_found.ToArray(), data);
+                }
+                return;
             }
             foreach (IntVec3 position in _confirmed)
             {

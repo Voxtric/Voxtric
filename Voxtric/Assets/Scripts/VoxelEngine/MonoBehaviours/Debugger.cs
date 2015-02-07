@@ -83,7 +83,7 @@ namespace VoxelEngine.MonoBehaviours
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
-                VoxelEdit.DamageAt(regionCollection, changePosition, 100, 15);
+                VoxelEdit.DamageAt(regionCollection, changePosition, 50, 10);
             }
         }
 
