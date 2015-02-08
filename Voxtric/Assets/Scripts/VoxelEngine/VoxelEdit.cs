@@ -179,7 +179,7 @@ namespace VoxelEngine
             for (int i = 0; i < positions.Count; i++)
             {
                 IntVec3 position = positions[i];
-                if (GetAt(regionCollection, position).visible == 0)
+                if (!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0)
                 {
                     positions.RemoveAt(i);
                     i--;
