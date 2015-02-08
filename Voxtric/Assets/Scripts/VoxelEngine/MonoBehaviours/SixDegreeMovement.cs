@@ -31,29 +31,38 @@ namespace VoxelEngine.MonoBehaviours
 
         private void RegisterMovement()
         {
+            if (Input.GetAxis("Mouse ScrollWheel") > 0)
+            {
+                _transform.position += _transform.forward * (SPEED * 2);
+            }
+            else if (Input.GetAxis("Mouse ScrollWheel") < 0)
+            {
+                _transform.position -= _transform.forward * (SPEED * 2);
+            }
+
             if (Input.GetKey(KeyCode.E))
             {
-                _transform.position += (_transform.up * SPEED);
+                _transform.position += _transform.up * SPEED;
             }
             else if (Input.GetKey(KeyCode.Q))
             {
-                _transform.position -= (_transform.up * SPEED);
+                _transform.position -= _transform.up * SPEED;
             }
             if (Input.GetKey(KeyCode.W))
             {
-                _transform.position += (_transform.forward * SPEED);
+                _transform.position += _transform.forward * SPEED;
             }
             else if (Input.GetKey(KeyCode.S))
             {
-                _transform.position -= (_transform.forward * SPEED);
+                _transform.position -= _transform.forward * SPEED;
             }
             if (Input.GetKey(KeyCode.D))
             {
-                _transform.position += (_transform.right * SPEED);
+                _transform.position += _transform.right * SPEED;
             }
             else if (Input.GetKey(KeyCode.A))
             {
-                _transform.position -= (_transform.right * SPEED);
+                _transform.position -= _transform.right * SPEED;
             }
         }
 
