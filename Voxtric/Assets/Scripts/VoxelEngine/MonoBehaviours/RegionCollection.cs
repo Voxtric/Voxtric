@@ -197,11 +197,10 @@ namespace VoxelEngine.MonoBehaviours
                     IntVec3 minimumPosition = _minimumPositions.Dequeue();
                     _breakOffs++;
 
-                    Vector3 createPosition = minimumPosition;
-                    createPosition.x = createPosition.x * _convexShapes.forward.x;
-                    createPosition.y = createPosition.y * _convexShapes.up.y;
-                    createPosition.z = createPosition.z * _convexShapes.right.z;
-                    createPosition += _convexShapes.localPosition;
+                    Vector3 createPosition = new Vector3();
+                    createPosition.x = _convexShapes.right.x * (minimumPosition.x + _convexShapes.position.x);
+                    createPosition.y = _convexShapes.up.y * (minimumPosition.y + _convexShapes.position.y);
+                    createPosition.z = _convexShapes.forward.z * (minimumPosition.z + _convexShapes.position.z);
 
                     RegionCollection regionCollection = RegionCollection.CreateRegionCollection(createPosition, _convexShapes.localEulerAngles, dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
                     for (int i = 0; i < positions.Length; i++)
