@@ -98,7 +98,7 @@ namespace VoxelEngine
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
             HashSet<IntVec3> startPositions = ((SplitCheckInfo)splitCheckInfo).positions;
-            TrimBadPoints(regionCollection, startPositions);
+            startPositions.RemoveWhere(delegate(IntVec3 position) { return !ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0; });
             List<DataSplitFinder> finders = new List<DataSplitFinder>();
             List<DataSplitFinder> findersToRemove = new List<DataSplitFinder>();
             foreach (IntVec3 position in startPositions)
@@ -112,7 +112,6 @@ namespace VoxelEngine
                 if (!findersToRemove.Contains(finder))
                 {
                     finder.Iterate();
-                    //iterationCalls++;
                 }
             }
             foreach (DataSplitFinder finder in findersToRemove)
@@ -153,16 +152,6 @@ namespace VoxelEngine
         private static void TrimBadPoints(RegionCollection regionCollection, HashSet<IntVec3> positions)
         {
             positions.RemoveWhere(delegate(IntVec3 position) { return !ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0; });
-            
-            /*for (int i = 0; i < positions.Count; i++)
-            {
-                IntVec3 position = positions[i];
-                if (!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0)
-                {
-                    positions.RemoveAt(i);
-                    i--;
-                }
-            }*/
         }
     }
 }

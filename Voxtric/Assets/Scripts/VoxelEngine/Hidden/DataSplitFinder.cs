@@ -71,7 +71,7 @@ namespace VoxelEngine.Hidden
                 {
                     MergeLists(finder);
                 }
-                else if (!_lastConfirmed.Contains(position) && !_confirmed.Contains(position))// && !_newPositions.Contains(position))
+                else if (!_lastConfirmed.Contains(position) && !_confirmed.Contains(position))
                 {
                     _newPositions.Add(position);
                 }
