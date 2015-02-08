@@ -98,14 +98,7 @@ namespace VoxelEngine.Hidden
                     {
                         for (int z = 0; z < SIZE; z++)
                         {
-                            if (x + (_dataPosition.x * SIZE) == 0 || y + (_dataPosition.y * SIZE) == 0 || z + (_dataPosition.z * SIZE) == 0 || x + (_dataPosition.x * SIZE) == 47 || y + (_dataPosition.y * SIZE) == 47 || z + (_dataPosition.z * SIZE) == 47)
-                            {
-
-                            }
-                            else
-                            {
-                                _data[x, y, z] = (ushort)new Block(2, 1, 40);
-                            }
+                            _data[x, y, z] = (ushort)new Block(2, 1, 40);
                         }
                     }
                 }

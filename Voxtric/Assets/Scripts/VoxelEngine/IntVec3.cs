@@ -16,6 +16,42 @@ namespace VoxelEngine
             this.z = z;
         }
 
+        public static IntVec3 ReplaceFewer(IntVec3 intVec3_1, IntVec3 intVec3_2)
+        {
+            IntVec3 fewest = intVec3_1;
+            if (intVec3_2.x < fewest.x)
+            {
+                fewest.x = intVec3_2.x;
+            }
+            if (intVec3_2.y < fewest.y)
+            {
+                fewest.y = intVec3_2.y;
+            }
+            if (intVec3_2.z < fewest.z)
+            {
+                fewest.z = intVec3_2.z;
+            }
+            return fewest;
+        }
+
+        public static IntVec3 ReplaceGreater(IntVec3 intVec3_1, IntVec3 intVec3_2)
+        {
+            IntVec3 greatest = intVec3_1;
+            if (intVec3_2.x > greatest.x)
+            {
+                greatest.x = intVec3_2.x;
+            }
+            if (intVec3_2.y > greatest.y)
+            {
+                greatest.y = intVec3_2.y;
+            }
+            if (intVec3_2.z > greatest.z)
+            {
+                greatest.z = intVec3_2.z;
+            }
+            return greatest;
+        }
+
         public static explicit operator string(IntVec3 intVec3) { return string.Format("X{0},Y{1},Z{2}", intVec3.x, intVec3.y, intVec3.z); }
         public static implicit operator Vector3(IntVec3 intVec3) { return new Vector3(intVec3.x, intVec3.y, intVec3.z); }
 

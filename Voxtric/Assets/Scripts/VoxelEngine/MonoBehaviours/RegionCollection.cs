@@ -60,6 +60,8 @@ namespace VoxelEngine.MonoBehaviours
 
         private Queue<IntVec3[]> _dataPositionArrays = new Queue<IntVec3[]>();
         private Queue<Block[]> _dataArrays = new Queue<Block[]>();
+        private Queue<IntVec3> _splitDimensions = new Queue<IntVec3>();
+        private Queue<IntVec3> _minimumPositions = new Queue<IntVec3>();
         private int _breakOffs = 0;
 
         private int _blockCount = 0;
@@ -73,7 +75,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             _blockCount -= remove;
             _blockCount += add;
-            _convexShapes.rigidbody.mass = _blockCount;// *0.001f;
+            _convexShapes.rigidbody.mass = _blockCount;
         }
 
         public void UnloadRegion(IntVec3 dataPosition, bool replaceWithEmpty)
@@ -172,12 +174,14 @@ namespace VoxelEngine.MonoBehaviours
             _concaveShapes.position = _convexShapes.position;
         }
 
-        public void SetPositionsToSplit(IntVec3[] dataPositions, Block[] data)
+        public void SetPositionsToSplit(IntVec3[] dataPositions, Block[] data, IntVec3 dimensions, IntVec3 minimumPosition)
         {
             lock (_dataPositionArrays)
             {
                 _dataPositionArrays.Enqueue(dataPositions);
                 _dataArrays.Enqueue(data);
+                _splitDimensions.Enqueue(dimensions);
+                _minimumPositions.Enqueue(minimumPosition);
             }
         }
 
@@ -189,11 +193,15 @@ namespace VoxelEngine.MonoBehaviours
                 {
                     IntVec3[] positions = _dataPositionArrays.Dequeue();
                     Block[] data = _dataArrays.Dequeue();
+                    IntVec3 dimensions = _splitDimensions.Dequeue();
+                    IntVec3 minimumPosition = _minimumPositions.Dequeue();
                     _breakOffs++;
-                    RegionCollection regionCollection = RegionCollection.CreateRegionCollection(_convexShapes.position, _convexShapes.eulerAngles, _dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
+                    Debug.Log((string)minimumPosition);
+                    RegionCollection regionCollection = RegionCollection.CreateRegionCollection(_convexShapes.position + minimumPosition, _convexShapes.eulerAngles, dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
                     for (int i = 0; i < positions.Length; i++)
                     {
-                        VoxelEdit.SetAt(regionCollection, positions[i], data[i]);
+                        IntVec3 position = positions[i];
+                        VoxelEdit.SetAt(regionCollection, position - minimumPosition, data[i]);
                     }
                     Rigidbody newRigidbody = regionCollection.transform.GetChild(1).rigidbody;
                     newRigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;

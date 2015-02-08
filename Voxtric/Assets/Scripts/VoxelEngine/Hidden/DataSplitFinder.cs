@@ -90,6 +90,8 @@ namespace VoxelEngine.Hidden
                 _findersToRemove.Add(this);
                 int dataToRemove = 0;
                 Block[] data = new Block[_found.Count];
+                IntVec3 min = _found[0];
+                IntVec3 max = _found[0];
                 for (int i = 0; i < data.Length; i++)
                 {
                     Block block = VoxelEdit.GetAt(_regionCollection, _found[i]);
@@ -98,11 +100,17 @@ namespace VoxelEngine.Hidden
                         dataToRemove++;
                         data[i] = block;
                         VoxelEdit.SetAt(_regionCollection, _found[i], Block.empty);
+                        min = IntVec3.ReplaceFewer(min, _found[i]);
+                        max = IntVec3.ReplaceGreater(max, _found[i]);
                     }
                 }
                 if (dataToRemove > 0)
                 {
-                    _regionCollection.SetPositionsToSplit(_found.ToArray(), data);
+                    IntVec3 dimensions = max - min + IntVec3.one; ;
+                    dimensions.x = Mathf.CeilToInt(dimensions.x / VoxelData.SIZE);
+                    dimensions.y = Mathf.CeilToInt(dimensions.y / VoxelData.SIZE);
+                    dimensions.z = Mathf.CeilToInt(dimensions.z / VoxelData.SIZE);
+                    _regionCollection.SetPositionsToSplit(_found.ToArray(), data, dimensions + IntVec3.one, min);
                 }
                 return;
             }
