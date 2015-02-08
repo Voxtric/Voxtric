@@ -29,10 +29,5 @@ namespace VoxelEngine.MonoBehaviours
         {
             return _regionCollection;
         }
-
-        private void OnCollisionEnter(Collision collision)
-        {
-            print(name + " collided with " + collision.collider.name);
-        }
     }
 }

@@ -8,6 +8,7 @@ namespace VoxelEngine.MonoBehaviours
 {
     public sealed class RegionCollection : MonoBehaviour
     {
+        private const float MASS_PER_VOXEL = 0.001f;
         public static List<RegionCollection> allCollections = new List<RegionCollection>();
         public static int totalLoadedRegions
         {
@@ -75,7 +76,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             _blockCount -= remove;
             _blockCount += add;
-            _convexShapes.rigidbody.mass = _blockCount;
+            _convexShapes.rigidbody.mass = _blockCount * MASS_PER_VOXEL;
         }
 
         public void UnloadRegion(IntVec3 dataPosition, bool replaceWithEmpty)

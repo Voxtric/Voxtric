@@ -9,7 +9,7 @@ namespace VoxelEngine
 {
     public static class VoxelEdit
     {
-        private const int MAX_ITERATIONS = 100;
+        private const int MAX_ITERATIONS = 300;
 
         public static IntVec3 WorldToDataPosition(RegionCollection regionCollection, Vector3 worldPosition)
         {

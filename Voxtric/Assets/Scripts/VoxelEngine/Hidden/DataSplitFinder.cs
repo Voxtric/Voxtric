@@ -7,9 +7,9 @@ namespace VoxelEngine.Hidden
     public sealed class DataSplitFinder
     {
         private List<IntVec3> _found = new List<IntVec3>();
-        private List<IntVec3> _confirmed = new List<IntVec3>();
-        private List<IntVec3> _lastConfirmed = new List<IntVec3>();
-        private List<IntVec3> _newPositions = new List<IntVec3>();
+        private HashSet<IntVec3> _confirmed = new HashSet<IntVec3>();
+        private HashSet<IntVec3> _lastConfirmed = new HashSet<IntVec3>();
+        private HashSet<IntVec3> _newPositions = new HashSet<IntVec3>();
 
         private RegionCollection _regionCollection;
         private List<DataSplitFinder> _finders;
@@ -71,7 +71,7 @@ namespace VoxelEngine.Hidden
                 {
                     MergeLists(finder);
                 }
-                else if (!_lastConfirmed.Contains(position) && !_confirmed.Contains(position) && !_newPositions.Contains(position))
+                else if (!_lastConfirmed.Contains(position) && !_confirmed.Contains(position))// && !_newPositions.Contains(position))
                 {
                     _newPositions.Add(position);
                 }
@@ -127,14 +127,14 @@ namespace VoxelEngine.Hidden
             }
             _lastConfirmed = _confirmed;
             _confirmed = _newPositions;
-            _newPositions = new List<IntVec3>();
+            _newPositions = new HashSet<IntVec3>();
         }
 
         private void MergeLists(DataSplitFinder finder)
         {
             DataSplitInfo info = finder.GetFinderInfo();
             _found.AddRange(info.found);
-            _newPositions.AddRange(info.confirmed);
+            _newPositions.UnionWith(info.confirmed);
             _findersToRemove.Add(finder);
             _voxelCount += finder.GetVoxelCount();
         }

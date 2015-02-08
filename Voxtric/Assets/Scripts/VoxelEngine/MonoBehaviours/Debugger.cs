@@ -8,6 +8,8 @@ namespace VoxelEngine.MonoBehaviours
     {
         private bool _displayBoundaries = false;
         private bool _displayGUI = true;
+        private byte _damage = 50;
+        private byte _radius = 10;
 
         private void DisplayRegionBoundaries()
         {
@@ -69,9 +71,9 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (_displayGUI)
             {
-                GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}", (int)(1.0f / Time.smoothDeltaTime)));
+                GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}\n", (int)(1.0f / Time.smoothDeltaTime)));
                 int totalLoaded = RegionCollection.totalLoadedRegions;
-                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3)));
+                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)\n\nDamage: {3}\nRadius: {4}", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3), _damage, _radius));
             }
         }
 
@@ -83,7 +85,7 @@ namespace VoxelEngine.MonoBehaviours
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
-                VoxelEdit.DamageAt(regionCollection, changePosition, 50, 10);
+                VoxelEdit.DamageAt(regionCollection, changePosition, _damage, _radius);
             }
         }
 
@@ -92,6 +94,22 @@ namespace VoxelEngine.MonoBehaviours
             if (Input.GetMouseButtonDown(0))
             {
                 ChangeAtCursor();
+            }
+            if (Input.GetKey(KeyCode.RightArrow))
+            {
+                _radius++;
+            }
+            else if (Input.GetKey(KeyCode.LeftArrow))
+            {
+                _radius--;
+            }
+            if (Input.GetKey(KeyCode.UpArrow))
+            {
+                _damage++;
+            }
+            else if (Input.GetKey(KeyCode.DownArrow))
+            {
+                _damage--;
             }
 
             if (Input.GetKeyDown(KeyCode.Alpha1))
