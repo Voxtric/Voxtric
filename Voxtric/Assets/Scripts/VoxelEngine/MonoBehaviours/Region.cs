@@ -20,7 +20,8 @@ namespace VoxelEngine.MonoBehaviours
         private Vector3[] _vertices;
         private int[] _triangles;
         private Vector2[] _uv;
-        private int _blocks;
+        private int _newBlockCount;
+        private int _oldBlockCount;
 
         private Mesh _mesh;
         private MeshCollider _convexCollider;
@@ -71,7 +72,8 @@ namespace VoxelEngine.MonoBehaviours
             _vertices = vertices;
             _triangles = triangles;
             _uv = uv;
-            _blocks = blocks;
+            _oldBlockCount = _newBlockCount;
+            _newBlockCount = blocks;
             _requiresUpdate = true;
         }
 
@@ -202,7 +204,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (_vertices.Length == 0)
             {
-                if (_blocks == 0)
+                if (_newBlockCount == 0)
                 {
                     _regionCollection.UnloadRegion(_voxelData.GetDataPosition(), true);
                 }
@@ -223,6 +225,7 @@ namespace VoxelEngine.MonoBehaviours
                 _convexCollider.sharedMesh = null;
                 _convexCollider.sharedMesh = _mesh;
                 _concaveCollider.UpdateCollider(_mesh);
+                _regionCollection.UpdateBlockCount(_oldBlockCount, _newBlockCount);
             }
         }
 

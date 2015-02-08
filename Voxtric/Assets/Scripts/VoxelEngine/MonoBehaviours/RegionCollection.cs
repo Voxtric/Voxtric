@@ -62,9 +62,18 @@ namespace VoxelEngine.MonoBehaviours
         private Queue<Block[]> _dataArrays = new Queue<Block[]>();
         private int _breakOffs = 0;
 
+        private int _blockCount = 0;
+
         public string collectionDirectory
         {
             get { return string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name); }
+        }
+
+        public void UpdateBlockCount(int remove, int add)
+        {
+            _blockCount -= remove;
+            _blockCount += add;
+            _convexShapes.rigidbody.mass = _blockCount;// *0.001f;
         }
 
         public void UnloadRegion(IntVec3 dataPosition, bool replaceWithEmpty)
