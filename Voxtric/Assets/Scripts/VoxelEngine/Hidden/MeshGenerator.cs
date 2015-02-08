@@ -156,6 +156,10 @@ namespace VoxelEngine.Hidden
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    CubeEast(x, y, z, block.ID);
+                                }
                                 if (x - 1 >= 0)
                                 {
                                     if (info.region.GetBlock(x - 1, y, z).visible == 0)
@@ -173,6 +177,10 @@ namespace VoxelEngine.Hidden
                                             CubeWest(x, y, z, block.ID);
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    CubeWest(x, y, z, block.ID);
                                 }
                                 if (y + 1 < VoxelData.SIZE)
                                 {
@@ -192,6 +200,10 @@ namespace VoxelEngine.Hidden
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    CubeTop(x, y, z, block.ID);
+                                }
                                 if (y - 1 >= 0)
                                 {
                                     if (info.region.GetBlock(x, y - 1, z).visible == 0)
@@ -209,6 +221,10 @@ namespace VoxelEngine.Hidden
                                             CubeBottom(x, y, z, block.ID);
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    CubeBottom(x, y, z, block.ID);
                                 }
                                 if (z + 1 < VoxelData.SIZE)
                                 {
@@ -228,6 +244,10 @@ namespace VoxelEngine.Hidden
                                         }
                                     }
                                 }
+                                else
+                                {
+                                    CubeNorth(x, y, z, block.ID);
+                                }
                                 if (z - 1 >= 0)
                                 {
                                     if (info.region.GetBlock(x, y, z - 1).visible == 0)
@@ -245,6 +265,10 @@ namespace VoxelEngine.Hidden
                                             CubeSouth(x, y, z, block.ID);
                                         }
                                     }
+                                }
+                                else
+                                {
+                                    CubeSouth(x, y, z, block.ID);
                                 }
                             }
                         }
