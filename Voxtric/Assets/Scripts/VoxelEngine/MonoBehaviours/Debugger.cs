@@ -6,6 +6,8 @@ namespace VoxelEngine.MonoBehaviours
 {
     public class Debugger : MonoBehaviour
     {
+        private GUIStyle _style = new GUIStyle();
+
         private bool _displayBoundaries = false;
         private bool _displayGUI = true;
         private byte _damage = 50;
@@ -50,6 +52,11 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
+        private void Awake()
+        {
+            _style.normal.textColor = Color.magenta;
+        }
+
         private void SaveAllRegionCollections()
         {
             foreach (RegionCollection regionCollection in RegionCollection.allCollections)
@@ -71,9 +78,9 @@ namespace VoxelEngine.MonoBehaviours
         {
             if (_displayGUI)
             {
-                GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}\n", (int)(1.0f / Time.smoothDeltaTime)));
+                GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}\n", (int)(1.0f / Time.smoothDeltaTime)), _style);
                 int totalLoaded = RegionCollection.totalLoadedRegions;
-                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)\n\nDamage: {3}\nRadius: {4}", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3), _damage, _radius));
+                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)\n\nDamage: {3}\nRadius: {4}", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3), _damage, _radius), _style);
             }
         }
 

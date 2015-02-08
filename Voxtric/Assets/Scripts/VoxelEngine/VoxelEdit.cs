@@ -40,7 +40,7 @@ namespace VoxelEngine
 
         public static void DamageAt(RegionCollection regionCollection, IntVec3 dataPosition, byte damage, byte radius)
         {
-            List<IntVec3> breakPoints = new List<IntVec3>();
+            HashSet<IntVec3> breakPoints = new HashSet<IntVec3>();
             for (int x = dataPosition.x - radius + 1; x <= dataPosition.x + radius; x++)
             {
                 for (int y = dataPosition.y - radius + 1; y <= dataPosition.y + radius + 1; y++)
@@ -53,36 +53,12 @@ namespace VoxelEngine
                         {
                             if (BrokeWithDamageAt(regionCollection, position, (byte)(damage * ((radius - distance) / radius))))
                             {
-                                IntVec3 newPosition = position + IntVec3.right;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
-                                newPosition = position + IntVec3.left;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
-                                newPosition = position + IntVec3.forward;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
-                                newPosition = position + IntVec3.back;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
-                                newPosition = position + IntVec3.up;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
-                                newPosition = position + IntVec3.down;
-                                if (!breakPoints.Contains(newPosition))
-                                {
-                                    breakPoints.Add(newPosition);
-                                }
+                                breakPoints.Add(position + IntVec3.right);
+                                breakPoints.Add(position + IntVec3.left);
+                                breakPoints.Add(position + IntVec3.up);
+                                breakPoints.Add(position + IntVec3.down);
+                                breakPoints.Add(position + IntVec3.forward);
+                                breakPoints.Add(position + IntVec3.back);
                             }
                         }
                     }
@@ -112,7 +88,7 @@ namespace VoxelEngine
             return new Block(0, 1, 0);
         }
 
-        public static void CheckCollectionSplit(RegionCollection regionCollection, List<IntVec3> points)
+        public static void CheckCollectionSplit(RegionCollection regionCollection, HashSet<IntVec3> points)
         {
             ThreadPool.QueueUserWorkItem(new WaitCallback(CheckSplit), new SplitCheckInfo(regionCollection, points));
             //CheckSplit((System.Object)new SplitCheckInfo(regionCollection, points));
@@ -121,7 +97,7 @@ namespace VoxelEngine
         private static void CheckSplit(System.Object splitCheckInfo)
         {
             RegionCollection regionCollection = ((SplitCheckInfo)splitCheckInfo).regionCollection;
-            List<IntVec3> startPositions = ((SplitCheckInfo)splitCheckInfo).positions;
+            HashSet<IntVec3> startPositions = ((SplitCheckInfo)splitCheckInfo).positions;
             TrimBadPoints(regionCollection, startPositions);
             List<DataSplitFinder> finders = new List<DataSplitFinder>();
             List<DataSplitFinder> findersToRemove = new List<DataSplitFinder>();
@@ -174,9 +150,11 @@ namespace VoxelEngine
             }
         }
 
-        private static void TrimBadPoints(RegionCollection regionCollection, List<IntVec3> positions)
+        private static void TrimBadPoints(RegionCollection regionCollection, HashSet<IntVec3> positions)
         {
-            for (int i = 0; i < positions.Count; i++)
+            positions.RemoveWhere(delegate(IntVec3 position) { return !ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0; });
+            
+            /*for (int i = 0; i < positions.Count; i++)
             {
                 IntVec3 position = positions[i];
                 if (!ValidPosition(regionCollection.GetDimensions() * VoxelData.SIZE, position) || GetAt(regionCollection, position).visible == 0)
@@ -184,7 +162,7 @@ namespace VoxelEngine
                     positions.RemoveAt(i);
                     i--;
                 }
-            }
+            }*/
         }
     }
 }
