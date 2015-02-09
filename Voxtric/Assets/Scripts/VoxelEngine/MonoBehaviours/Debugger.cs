@@ -10,8 +10,8 @@ namespace VoxelEngine.MonoBehaviours
 
         private bool _displayBoundaries = false;
         private bool _displayGUI = true;
-        private byte _damage = 50;
-        private byte _radius = 10;
+        private byte _damage = 100;
+        private byte _radius = 20;
 
         private void DisplayRegionBoundaries()
         {
@@ -80,7 +80,7 @@ namespace VoxelEngine.MonoBehaviours
             {
                 GUI.Label(new Rect(3, Screen.height - 23, 100, 20), string.Format("FPS: {0}\n", (int)(1.0f / Time.smoothDeltaTime)), _style);
                 int totalLoaded = RegionCollection.totalLoadedRegions;
-                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)\n\nDamage: {3}\nRadius: {4}", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3), _damage, _radius), _style);
+                GUI.Label(new Rect(3, 3, 300, 300), string.Format("Active region collection: {0}\nRegions in memory: {1} ({2} voxels)\n\nDamage: {3}\nRadius: {4}", RegionCollection.allCollections.Count, totalLoaded, totalLoaded * Mathf.Pow(VoxelData.SIZE, 3), _damage / 2, _radius / 2), _style);
             }
         }
 
@@ -92,7 +92,7 @@ namespace VoxelEngine.MonoBehaviours
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
-                VoxelEdit.DamageAt(regionCollection, changePosition, _damage, _radius);
+                VoxelEdit.DamageAt(regionCollection, changePosition, (byte)(_damage / 2), (byte)(_radius / 2));
             }
         }
 

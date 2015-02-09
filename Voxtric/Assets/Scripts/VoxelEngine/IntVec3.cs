@@ -16,6 +16,13 @@ namespace VoxelEngine
             this.z = z;
         }
 
+        public IntVec3(Vector3 vector3)
+        {
+            this.x = (int)vector3.x;
+            this.y = (int)vector3.y;
+            this.z = (int)vector3.z;
+        }
+
         public static IntVec3 ReplaceFewer(IntVec3 intVec3_1, IntVec3 intVec3_2)
         {
             IntVec3 fewest = intVec3_1;
@@ -50,6 +57,11 @@ namespace VoxelEngine
                 greatest.z = intVec3_2.z;
             }
             return greatest;
+        }
+
+        public override string ToString()
+        {
+            return string.Format("({0}, {1}, {2})", x, y, z);
         }
 
         public static explicit operator string(IntVec3 intVec3) { return string.Format("X{0},Y{1},Z{2}", intVec3.x, intVec3.y, intVec3.z); }

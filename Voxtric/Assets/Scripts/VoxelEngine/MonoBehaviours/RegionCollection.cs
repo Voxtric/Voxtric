@@ -42,7 +42,7 @@ namespace VoxelEngine.MonoBehaviours
             {
                 throw new ArgumentException(string.Format("Region called {0} already exists", name), "name");
             }
-            GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab);
+            GameObject regionCollectionObj = (GameObject)Instantiate(regionCollectionPrefab, Vector3.zero, new Quaternion());
             RegionCollection regionCollection = regionCollectionObj.GetComponent<RegionCollection>();
             regionCollection.Initialise(position, eularAngles, dimensions, name);
             return regionCollection;
@@ -150,8 +150,8 @@ namespace VoxelEngine.MonoBehaviours
             _regions = new Region[dimensions.x, dimensions.y, dimensions.z];
             _concaveShapes = transform.GetChild(0);
             _convexShapes = transform.GetChild(1);
-            _convexShapes.localEulerAngles = eularAngles;
             _convexShapes.localPosition = position;
+            _convexShapes.localEulerAngles = eularAngles;
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
             _positionPointer.parent = _concaveShapes;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name));
@@ -195,19 +195,19 @@ namespace VoxelEngine.MonoBehaviours
                     IntVec3[] positions = _dataPositionArrays.Dequeue();
                     Block[] data = _dataArrays.Dequeue();
                     IntVec3 dimensions = _splitDimensions.Dequeue();
-                    IntVec3 minimumPosition = _minimumPositions.Dequeue();
+                    Vector3 minimumPosition = _minimumPositions.Dequeue();
                     _breakOffs++;
 
-                    Vector3 createPosition = new Vector3();
-                    createPosition.x = _convexShapes.right.x * (minimumPosition.x + _convexShapes.position.x);
-                    createPosition.y = _convexShapes.up.y * (minimumPosition.y + _convexShapes.position.y);
-                    createPosition.z = _convexShapes.forward.z * (minimumPosition.z + _convexShapes.position.z);
+                    RegionCollection regionCollection = RegionCollection.CreateRegionCollection(Vector3.zero, _convexShapes.localEulerAngles, dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
+                    Transform temp = regionCollection.transform.GetChild(1);
+                    temp.parent = _convexShapes;
+                    temp.localPosition = minimumPosition;
+                    temp.parent = regionCollection.transform;
 
-                    RegionCollection regionCollection = RegionCollection.CreateRegionCollection(createPosition, _convexShapes.localEulerAngles, dimensions, string.Format("{0} Break Off {1}", name, _breakOffs));
                     for (int i = 0; i < positions.Length; i++)
                     {
                         IntVec3 position = positions[i];
-                        VoxelEdit.SetAt(regionCollection, position - minimumPosition, data[i]);
+                        VoxelEdit.SetAt(regionCollection, position - new IntVec3(minimumPosition), data[i]);
                     }
                     Rigidbody newRigidbody = regionCollection.transform.GetChild(1).rigidbody;
                     newRigidbody.centerOfMass = _convexShapes.rigidbody.centerOfMass;
