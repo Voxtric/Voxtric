@@ -34,6 +34,7 @@ namespace VoxelEngine.MonoBehaviours
             {
                 _voxelData.LoadData(collectionDirectory);
             }
+            //QueueMeshGeneration();
         }
 
         public void SaveVoxelData(string collectionDirectory)
@@ -48,7 +49,7 @@ namespace VoxelEngine.MonoBehaviours
         {
             gameObject.name = (string)dataPosition;
             renderer.material.mainTexture = TextureFinder.regionTexture;
-            _voxelData = new VoxelData(dataPosition, regionCollection.collectionDirectory);
+            _voxelData = new VoxelData(dataPosition, regionCollection.GetCollectionDirectory(true));
             _meshGenerator = new MeshGenerator();
             _mesh = GetComponent<MeshFilter>().mesh;
             _convexCollider = GetComponent<MeshCollider>();

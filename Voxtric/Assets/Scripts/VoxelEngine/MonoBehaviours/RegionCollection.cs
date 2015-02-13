@@ -67,9 +67,16 @@ namespace VoxelEngine.MonoBehaviours
 
         private int _blockCount = 0;
 
-        public string collectionDirectory
+        public string GetCollectionDirectory(bool fromOrigin)
         {
-            get { return string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name); }
+            if (fromOrigin)
+            {
+                return string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name);
+            }
+            else
+            {
+                return string.Format(@"{0}\Collections\{1}", SceneInitialiser.saveDirectory, name);
+            }
         }
 
         public void UpdateBlockCount(int remove, int add)
@@ -92,10 +99,15 @@ namespace VoxelEngine.MonoBehaviours
                 region = GetRegion(dataPosition.x, dataPosition.y, dataPosition.z);
                 _regions[dataPosition.x, dataPosition.y, dataPosition.z] = Region.emptyRegion;
             }
-            region.SaveVoxelData(collectionDirectory);
+            region.SaveVoxelData(GetCollectionDirectory(false));
             region.DestroyConcaveCollider();
             MonoBehaviour.Destroy(region.gameObject);
             _regionsLoaded--;
+            if (_regionsLoaded == 0)
+            {
+                allCollections.Remove(this);
+                MonoBehaviour.Destroy(gameObject);
+            }
         }
 
         public void SaveAllVoxelData()
@@ -107,10 +119,30 @@ namespace VoxelEngine.MonoBehaviours
                     for (int z = 0; z < _dimensions.z; z++)
                     {
                         Region region = GetRegion(x, y, z);
-                        if (region != null)
+                        if (region != null && region != Region.emptyRegion)
                         {
-                            region.SaveVoxelData(collectionDirectory);
+                            region.SaveVoxelData(GetCollectionDirectory(false));
                         }
+                    }
+                }
+            }
+        }
+
+        public void LoadAllVoxelData(string collectionDirectory)
+        {
+            for (int x = 0; x < _dimensions.x; x++)
+            {
+                for (int y = 0; y < _dimensions.y; y++)
+                {
+                    for (int z = 0; z < _dimensions.z; z++)
+                    {
+                        Region region = GetRegion(x, y, z);
+                        if (region == null)
+                        {
+                            region = CreateRegion(x, y, z);
+                        }
+                        region.LoadVoxelData(collectionDirectory);
+                        region.QueueMeshGeneration();
                     }
                 }
             }
@@ -155,6 +187,7 @@ namespace VoxelEngine.MonoBehaviours
             _positionPointer = new GameObject("Position Pointer").GetComponent<Transform>();
             _positionPointer.parent = _concaveShapes;
             Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", SceneInitialiser.sceneDirectory, name));
+            Directory.CreateDirectory(string.Format(@"{0}\Collections\{1}", SceneInitialiser.saveDirectory, name));
             for (int x = 0; x < dimensions.x; x++)
             {
                 for (int y = 0; y < dimensions.y; y++)

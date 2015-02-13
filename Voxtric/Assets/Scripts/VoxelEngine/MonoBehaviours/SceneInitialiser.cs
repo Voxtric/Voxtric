@@ -8,6 +8,7 @@ namespace VoxelEngine.MonoBehaviours
     {
         public static string gameDirectory;
         public static string sceneDirectory;
+        public static string saveDirectory;
 
         private void Awake()
         {
@@ -21,7 +22,8 @@ namespace VoxelEngine.MonoBehaviours
         private static void SetupDirectories()
         {
             gameDirectory = Application.persistentDataPath;
-            sceneDirectory = string.Format(@"{0}\{1}", gameDirectory, Application.loadedLevelName);
+            sceneDirectory = string.Format(@"{0}\Scenes\{1}", gameDirectory, Application.loadedLevelName);
+            saveDirectory = string.Format(@"{0}\Saves\{1}", gameDirectory, Application.loadedLevelName);
             Directory.CreateDirectory(string.Format(@"{0}\Textures", gameDirectory));
             Directory.CreateDirectory(sceneDirectory);
             Directory.CreateDirectory(string.Format(@"{0}\Collections", sceneDirectory));

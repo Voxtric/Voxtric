@@ -65,6 +65,14 @@ namespace VoxelEngine.MonoBehaviours
             }
         }
 
+        private void LoadAllRegionCollections(bool fromOrigin)
+        {
+            foreach (RegionCollection regionCollection in RegionCollection.allCollections)
+            {
+                regionCollection.LoadAllVoxelData(regionCollection.GetCollectionDirectory(fromOrigin));
+            }
+        }
+
         private void Update()
         {
             RegisterInputs();
@@ -130,6 +138,14 @@ namespace VoxelEngine.MonoBehaviours
             else if (Input.GetKeyDown(KeyCode.Alpha3))
             {
                 SaveAllRegionCollections();
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha4))
+            {
+                LoadAllRegionCollections(true);
+            }
+            else if (Input.GetKeyDown(KeyCode.Alpha5))
+            {
+                LoadAllRegionCollections(false);
             }
         }
     }
