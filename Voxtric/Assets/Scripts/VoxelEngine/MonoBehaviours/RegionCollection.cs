@@ -137,7 +137,7 @@ namespace VoxelEngine.MonoBehaviours
                     for (int z = 0; z < _dimensions.z; z++)
                     {
                         Region region = GetRegion(x, y, z);
-                        if (region == null)
+                        if (region == null || region == Region.emptyRegion)
                         {
                             region = CreateRegion(x, y, z);
                         }
