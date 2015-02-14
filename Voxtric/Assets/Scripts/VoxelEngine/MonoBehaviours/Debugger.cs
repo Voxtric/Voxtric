@@ -94,31 +94,14 @@ namespace VoxelEngine.MonoBehaviours
 
         private void ExplodeAtCursor()
         {
-            RaycastHit rayHit;
-            if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out rayHit, Mathf.Infinity, ~(1 << LayerMask.NameToLayer("Region"))))
-            {
-                List<RegionCollection> regionCollections = new List<RegionCollection>();
-                RaycastHit[] hits = Physics.SphereCastAll(rayHit.point, (byte)(_radius / 2), Vector3.right, Mathf.Infinity, 1 << LayerMask.NameToLayer("Region Collection"));
-                foreach (RaycastHit hit in hits)
-                {
-                    RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
-                    if (!regionCollections.Contains(regionCollection))
-                    {
-                        IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, rayHit.point);
-                        VoxelEdit.DamageAt(regionCollection, changePosition, (byte)(_damage / 2), (byte)(_radius / 2));
-                        regionCollections.Add(regionCollection);
-                    }
-                }
-            }
-
-            /*RaycastHit hit;
+            RaycastHit hit;
             if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, Mathf.Infinity, 1 << LayerMask.NameToLayer("Region Collection")))
             {
                 RegionCollection regionCollection = hit.collider.GetComponent<ConcaveCollider>().GetRegionCollection();
                 Vector3 position = hit.point + (hit.normal * -0.5f) + regionCollection.transform.GetChild(0).up;
                 IntVec3 changePosition = VoxelEdit.WorldToDataPosition(regionCollection, position);
                 VoxelEdit.DamageAt(regionCollection, changePosition, (byte)(_damage / 2), (byte)(_radius / 2));
-            }*/
+            }
         }
 
         private void RegisterInputs()
